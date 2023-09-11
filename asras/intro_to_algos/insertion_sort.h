@@ -39,6 +39,7 @@ void FNAME(INSERTION_SORT_TYPE)(INSERTION_SORT_TYPE *array, int size) {
     }
 }
 #endif // INSERTION_SORT_IMPL
+#undef concat 
 #undef FNAME
 #undef INSERTION_SORT_TYPE
 #undef INSERTION_SORT_CMP
