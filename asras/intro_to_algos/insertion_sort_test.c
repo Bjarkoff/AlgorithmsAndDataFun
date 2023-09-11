@@ -25,6 +25,7 @@ typedef struct Point {
 
 #include <assert.h> // For testing
 #include <stdlib.h> // For rand()
+#include <stdio.h> // For printf                    
 
 void test_int_sort(void) {
     int arr[] = { 5, 4, 3, 2, 1 };
@@ -46,10 +47,45 @@ void test_int_sort(void) {
     for (int i = 0; i < size - 1; i++) {
         assert(big_test[i] <= big_test[i + 1]);
     }
+    printf("Int test passed\n");
+}
+
+void test_float_sort(void) {
+    int size = 1000;
+    float test[size];
+    float max_value = 10000.0f;
+    float min_value = -10000.0f;
+    for (int i = 0; i < size; i++) {
+        test[i] = ((float)rand() / RAND_MAX) * (max_value - min_value) + min_value;
+    }
+    insertion_sort_float(test, size);
+    for (int i = 0; i < size - 1; i++) {
+        assert(test[i] < test[i + 1]);
+    }
+    printf("Float test passed\n");
+}
+
+
+#define PT_EQ(pt, v1, v2) ((pt.x == v1) && (pt.y == v2))
+void test_point_sort(void) {
+    Point pt1 = { 1.0, 1.0};
+    Point pt2 = { -1.0, 1.0};
+    Point pt3 = { 1.0, -1.0};
+    Point pt4 = { 2.0, -1.0};
+    Point pts[4] = {pt1, pt2, pt3, pt4};
+    insertion_sort_Point(pts, 4);
+    assert(PT_EQ(pts[0], -1.0, 1.0));
+    assert(PT_EQ(pts[1], 1.0, -1.0));
+    assert(PT_EQ(pts[2], 1.0, 1.0));
+    assert(PT_EQ(pts[3], 2.0, -1.0));
+    
+    printf("Point test passed\n");
 }
 
 int main(void) {
     test_int_sort();
+    test_float_sort();
+    test_point_sort();
 
     return 0;
 }
