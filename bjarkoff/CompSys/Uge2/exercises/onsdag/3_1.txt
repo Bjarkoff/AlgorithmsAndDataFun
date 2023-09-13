@@ -95,3 +95,28 @@ Så får vi skrevet tallet således på binær representation 16 bit:
 
 Radix_sort-opgave:
 
+lexicographical sorting means that e.g. 1111 > 0000, but if the binary is seen as a two's complement, this 
+will obviously be wrong. How can we transform the bits of two's complement signed integers 
+such that they can be compared lexicographically?
+
+Hvis signed-bit is 1 in both numbers, the lexicographical sorting will give the reverse outcome of
+what is intended (i.e. 1111 > 1000, however 1111 means very negative, so).
+If signed-bit is 0 in both numbers, the sorting works as it should (of course).
+If exactly one number has 1 in signed bit, then sorting again gives reverse
+result, since the number with a 1 should be lowest.
+What if we change all bits, if any one signed bit is 1? Then 1111 -> 0000 < 0111 <- 1000, so that works.
+Also 1111 -> 0000 < 0100 <- 0100. I.e. if only one number has a signed bit, both numbers also change,
+e.g. -128 < 4 --- (1111 1111 < 0000 0100) -> (0000 0000 < 1111 1011).
+Aha! But also for the case of two 0's, we could easily just flip the first bit, since it does not 
+change the lexicographical comparison! So solution is to flip the most significant bit.
+
+part two: 
+How can we transform the bits of IEEE 754 floating point numbers 
+such that they can be compared lexicographically?
+
+Well it should be the same, no? There is also a signed bit first, and it should work as above.
+But wait! If the sign-bit was set before flipping, we also need to flip all other bits. This is because the
+exponent is added with 127, so let's say one number is -2^0, another is -2^(1). Then one exponent
+in IEEE 754 is 1111 1110, the other 1111 1111. However, the lowest number is of course -2^1, so we 
+would want 1111 1111 < 1111 1110, and to make this happen we need to flip all bits (manually change the stuff)
+of at least the exponent (the exponent determines size), and if these are equal then also the fractional part.
