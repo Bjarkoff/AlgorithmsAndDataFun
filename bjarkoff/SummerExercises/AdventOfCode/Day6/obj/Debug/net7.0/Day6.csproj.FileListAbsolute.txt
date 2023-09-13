@@ -1,0 +1,15 @@
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/Day6.csproj.AssemblyReference.cache
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/Day6.GeneratedMSBuildEditorConfig.editorconfig
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/Day6.AssemblyInfoInputs.cache
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/Day6.AssemblyInfo.cs
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/Day6.csproj.CoreCompileInputs.cache
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/bin/Debug/net7.0/Day6
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/bin/Debug/net7.0/Day6.deps.json
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/bin/Debug/net7.0/Day6.runtimeconfig.json
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/bin/Debug/net7.0/Day6.dll
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/bin/Debug/net7.0/Day6.pdb
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/Day6.dll
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/refint/Day6.dll
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/Day6.pdb
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/Day6.genruntimeconfig.cache
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day6/obj/Debug/net7.0/ref/Day6.dll

@@ -1,0 +1,15 @@
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/Day10.csproj.AssemblyReference.cache
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/Day10.GeneratedMSBuildEditorConfig.editorconfig
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/Day10.AssemblyInfoInputs.cache
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/Day10.AssemblyInfo.cs
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/Day10.csproj.CoreCompileInputs.cache
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/bin/Debug/net7.0/Day10
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/bin/Debug/net7.0/Day10.deps.json
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/bin/Debug/net7.0/Day10.runtimeconfig.json
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/bin/Debug/net7.0/Day10.dll
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/bin/Debug/net7.0/Day10.pdb
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/Day10.dll
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/refint/Day10.dll
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/Day10.pdb
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/Day10.genruntimeconfig.cache
+/Users/bjarkerasmusnicolaisen/Dropbox/Marie_Kruse/2223/KUfag/SummerExercises/AdventOfCode/Day10/obj/Debug/net7.0/ref/Day10.dll

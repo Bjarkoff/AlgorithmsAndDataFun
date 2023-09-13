@@ -1,0 +1,97 @@
+Exercise 3.1:
+Skal udregne 5ED4 - 07A4, når disse er unsigned 16-bit hexadecimal tal.
+
+Så er det vel:
+
+(16^3*5+16^2*14+16*13+4) - (0+7*16^2+10*16+4) = 22320_ten = 5730_16bithexa
+Men man skal vist egentlig skrive det om til binær representation, så:
+
+5ED4 = 0101 1110 1101 0100
+07A4 = 0000 0111 1010 0100
+Result 0101 0111 0011 0000
+
+Exercise 3.3:
+
+5ED4 = 0101 1110 1101 0100, as seen above
+Hvorfor er base 16 (hexadecimal) attrctive numbering system for values in computers?
+Nok fordi de kan indeholde meget information på lidt plads? Og har en nem 
+konvertering til binær...
+
+Exercise 3.20:
+
+0 x 0C000000 repræsenterer hvad, hvis det er two's comlpement integer? Hvis det er unsigned integer?
+Two's complement, der er første bit fortegnet, dvs. 0 er positivt (tror jeg?)
+
+0X0C000000 = 
+0000 1100 0000 0000 0000 0000 0000 0000
+
+Mit problem er, jeg kan ikke se der er nogen forskel til unsigned og two's complement. 
+Men det er der vist ikke, fordi det skulle ligge i den første bit (most significant).
+
+Exercise 3.22:
+
+Beregn hvad 0x0C000000 representerer som decimaltal, hvis det er et floating point number.
+
+Vi har jo stadigvæk følgende binære oversættelse:
+0X0C000000 = 0000 1100 0000 0000 0000 0000 0000 0000
+For et floating point number skal det første tegn være fortegnet (som er 0, altså positivt). Så lidt 
+nemmere at skrive sådan:
+
+0X0C000000 = 0 0001 1000 - 0000 0000 0000 0000 0000 000
+det første er fortegn, de næste 8 er eksponenten og de sidste 23 er "fraction".
+Derfor fås at tallet i decimaltal er:
+1*0*2^(24) = 0, i decimaltal. AHA! Men i IEEE 754 standard er formlen 1 + fraction, så derfor:
+
+Eksponenten er 0001 1000 = 24_ten. Så skal vi 127 fra dette, vi får 24-127 = -103. Derfor:
+
+1*(1+0)*2^(24-127) = 1.0*2^(-103).
+
+Exercise 3.23:
+
+Nu skal vi omregne 63.25 til binær representation via IEEE 743 single precision.
+Først skal vi have normaliseret det:
+x = 63.25 = 63 + 1/4 = 1*2^5+1*2^4+1*2^3+1*2^2+1*2^1+1*2^0+0*2^(-1)+1*2^(-2).
+Vi skal skrive det i normaliseret scientific notation, så:
+x = 1.1111101_two*2^5.
+Nu skal vi lægge 127 til eksponenten:
+5+127 = 132.
+Det giver os følgende:
+x = (-1)^0 * (1+.1111 1101 0000 0000 0000 0000_two)*2^(132)
+Binær representation bliver så:
+0 - 1000 0100 - 1111 1101 0000 0000 0000 0000
+
+Exercise 3.24:
+
+Nu skal vi gøre det samme som før, men antage en double precision, når vi omskriver.
+
+Omskrivningen står ved magt, til gengæld er offsettet nu 1023 i stedet for 127. Derfor skal 
+følgende eksponent udregnes:
+5 + 1023 = 1028.
+I binær 11-bit skrives dette:
+10000000100_two = 1028_ten.
+nu får vi så følgende binær reprsentation med double precision:
+
+0 - 1000 0000 100 - 1111 1101 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+
+Exercise 3.27:
+
+Nu skal vi tage udgangspunkt i -1.5625*10^-1 i 16-bit notation., 5 steder til eksponent, 10 til fraction
+(antaget foranstillet 1).
+Vi ved at sign-bit skal være 1.
+Vi skal prøve at omskrive på numerisk værdi af tallet:
+-0.15625 = -10*1/64 = -10_ten / 2^6 = -1010_two / 2^6 = -0.001010_two
+
+For at få det på korrekt form skrives:
+
+-1.0100*2^(-3)
+
+Det giver en eksponent på:
+
+-3 + 15 = 12.
+
+Så får vi skrevet tallet således på binær representation 16 bit:
+
+1-01100-0100000000
+
+Radix_sort-opgave:
+

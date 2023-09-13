@@ -1,0 +1,6 @@
+Value 0xabcdef12 would be arranged like this in (memory below starting at address 0x000):
+Big endian: (first slot i address 0, then 1 and so on)
+| ab | cd | ef | 12 |
+Little endian:
+| 12 | ef | cd | ab |
+

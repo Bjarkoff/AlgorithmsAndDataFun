@@ -1,0 +1,101 @@
+Opgaver fredag:
+
+Opgave 1:
+
+a) algoritmen returnerer summen af n elementer fra et array A, startende fra A[n-1] 
+og sluttende med A[0].
+
+b) Vi skal omskrive den så den gør det samme, uden at være rekursiv (dvs. i stedet iterativ).
+Det kan se sådan ud:
+
+f(A,n) 
+  sum = 0;
+  while (n>0) {
+    sum += A[n-1]
+    n--;
+  }
+  return sum
+
+Opgave 2:
+
+a) triviel, gider ikke
+b) R1(n) returnerer altid 0.
+   R2(n) returnerer 2*n for n>1, ellers bare 2.
+   R3(n) returnerer 1+2+3+...+n = n(n+1)/2 for n>=1, mens den producerer stackoverflow for n<1.
+   R4(n) returnerer, hvor mange potenser af 10 n indeholder, dvs. log_10(n). Specifikt er det vist
+   ceiling af log_10(n), medmindre det er integer-division, så er det bare log_10(n).
+   R5(n) returnerer 2^n. (for n>=0).
+   R6(n) returnerer præcis det samme som R5(n), det udregnes bare dummere (som et træ).
+c) Vi omskriver R4(n) til at være iterativ:
+
+R4(n)
+  sum = 0
+  while (n>1)
+    sum++
+    n /= 10
+  return sum
+
+Opgave 3:
+
+a) Vi har 128 = 2^7 programmører. Vi kan først teste to grupper hver af 2^6. Den gruppe,
+som bonger ud, deles så igen i 2 grupper af 2^5, og den gruppe der bonger ud... indtil man 
+i 7. test har den syge mand.
+
+b) Sig vi har n = 2^k programmører. Så kan vi nøjes med k tests, eller altså log_2(n) tests.
+Hvis vi i stedet har n != 2^k programmører, bliver det lidt sværere.
+Vi forestiller os 10 personer: Her kan vi først teste 5 mod 5, derefter 3 og 2, derefter
+2 personer (hvis ingen bonger ud, må den tiloversblevne være manden), og til sidst 1.
+Det gav os 1+1+1+1 = 4 tests, det vil altså sige ceiling af log_2(n). Det beviser vi nu:
+
+Lemma: For n >= m vil der gælde k_n >= k_m, hvor k_i er det maksimale antal nødvendige
+inddelinger med i personer, for at finde den syge person.
+
+NU: betragt n = 2^k. Så er det nemt at se, at det kræver log_2(n) = k antal halveringer at 
+finde den syge. Betragt nu i stedet et n != 2^k, hvad så?
+hvis n != 2^k må n = 2^k + y, hvor 0 < y < 2^k. Lad os få lidt ting på plads:
+
+k_(2^k) = k, og k_(2^(k+1)) = k + 1. 
+
+Lad os så betragte m = 2^k + 1. Her kan vi inddele i 2^(k-1) og 2^(k-1) + 1. Dvs. vi 
+ender med at den gruppe med flest inddelinger er 1 større, end en potens af 2. Men det
+er jo det samme som udgangspunktet (m = 2^k + 1). Dvs. vi kan rekursivt fortsætte denne
+opførsel, og m vil altid have 1 person mere end (m-1) ville have, hvis man inddelte den. Vi 
+ved at for x = 2^k ville det kræve k inddelinger, men for m = 2^k + 1 vil det så være k+1 inddelinger,
+fordi man f.eks. vil have at x = 2^k efter (k-1) inddelinger er på 2 personer, mens m = 2^k + 1 efter (k-1) 
+inddelinger er på 3 personer, og her er det tydeligt at x kræver 1 test, mens m kræver 2. Altså vil 
+m = 2^k+1 kræve (k+1) inddelinger. Men det er jo det samme som antal personer på 2^(k+1) fra starten ville kræve.
+Nu siger lemmaet altså, at alle tal mellem 2^k og til og med 2^(k+1) maksimalt vil kræve k+1 inddelinger.
+Altså vil det maksimale antal tests man skal udføre med n medarbejde, k_n, være givet ved:
+k_n = ceiling(log_2(n)). Tak for kaffe.
+
+c) Nu lejer vi k > 1 kamre, og kan altså teste k programmører parallelt. Før kunne vi jo kun teste 1 gruppe
+af gangen, så derfor var det kun halvdelen, der gav mening. Nu kan vi altså teste k, derfor vil vi 
+gerne teste k grupper hver gang, og have én u-testet gruppe også (siden ingen positive i de andre grupper indikerer
+at det er den sidste gruppe, vi skal gå videre med). Så vi vil gerne udregnes
+n / (k+1) (heltalsdivision), og evt. hvis der er en rest vil der så være n / (k+1) + 1 i nogle grupper.
+Så skulle vi gerne ende ud med ceiling(log_(k+1)(n)) som svar. Eksempel:
+20 personer, 4 kamre. Vi udregner n / (k+1) = 20 / (4+1) = 4. Så vil der være 4 personer i hver gruppe (ingen rest).
+Så har vi nu efter 1 test en 4-mands gruppe, som nu kan sættes i hvert sit kammer. Dvs. 2 tests var nødvendige.
+log_5(20) ca. lig 1.86, så ceiling af det er lig 2, korrekt.
+Hvis nu det var 30 mand i stedet:
+30 / (4+1) = 6 (ingen rest). Så altså 6 personer.
+Nu har vi 6 personer, kan kun teste 4 af gangen, så én gruppe på 2 må være tilbage, altså derfor
+to tests mere, i alt 3. Og ceiling(log_5(30)) = 3.
+
+Opgave 4:
+
+A = [2; 1; 3; 7; 3; 11; 1; 5; 7; 10]
+
+a) toppunkter: A[0]=2, A[3] = 7, A[5] = 11, A[9] = 10.
+
+b) Toppunkt1(A,n) returnerer blot 0.
+   Toppunkt2(A,n) returnerer index af det første instance af globalt max i arrayet. Så her altså 5.
+c) Toppunkt1(A,n) tjekker aldrig om det sidste element er toppunkt, så vi skal bare indsætte et manuelt
+tjek for dette.
+
+d) Angiv sekvensen for Toppunkt3(A,0,9).
+Det er jo en halverings-algoritme til at søge efter toppunkt. Først findes midtpunktet (0+9/2) = 5.
+Så tjekkes om A[5] er toppunkt, det er det så, og så returneres blot 5. Hvis det ikke var,
+ville man tjekke om A[4] > A[5], hvis den var det ville man lede efter toppunkt til venstre.
+Der er nok en god dyb grund til at man altid vil finde eventuelle toppunkter på denne måde...
+Ethvert array har jo faktisk et toppunkt.
