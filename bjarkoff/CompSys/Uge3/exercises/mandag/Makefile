@@ -9,8 +9,8 @@ cmd: updatedfile(s).c
 hexabyte: hexabyte.c
 	$(CC) -o hexabyte hexabyte.c $(CFLAGS)
 
-repeatmeinput: repeatmeinput.c
-	$(CC) -o repeatmeinput repeatmeinput.c $(CFLAGS)
+int2ascii: int2ascii.c
+	$(CC) -o int2ascii int2ascii.c $(CFLAGS)
 
 guessinggame: guessinggame.c
 	$(CC) -o guessinggame guessinggame.c $(CFLAGS)
