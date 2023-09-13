@@ -12,8 +12,8 @@ hexabyte: hexabyte.c
 int2ascii: int2ascii.c
 	$(CC) -o int2ascii int2ascii.c $(CFLAGS)
 
-guessinggame: guessinggame.c
-	$(CC) -o guessinggame guessinggame.c $(CFLAGS)
+ascii2int: ascii2int.c
+	$(CC) -o ascii2int ascii2int.c $(CFLAGS)
 
 roll: roll.c
 	$(CC) -o roll roll.c $(CFLAGS)
