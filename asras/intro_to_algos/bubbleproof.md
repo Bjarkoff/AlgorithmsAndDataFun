@@ -58,8 +58,10 @@ The outer loop terminates when $i = n$, so we have that the array is sorted when
 
 ## Running time
 At step $i$ the inner loop executes $n - i$ steps, therefore the total number of steps is
+
 $$
 n_{steps} = \sum_{i = 1}^{n - 1} (n - i) = n(n - 1) - (n)(n - 1)/2 = \frac{n(n-1)}{2}
 $$
+
 Bubblesort runs in $O(n^2)$ time.
 
