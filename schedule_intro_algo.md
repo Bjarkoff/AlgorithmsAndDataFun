@@ -1,4 +1,5 @@
 | Kursusuge  |  Kalenderuge  |  Ugedag  |  Dato  |  Emne  |  Pensum  |  Afleveringsopgave (deadline onsdag kl. 21:59)
+| --- | --- | --- | --- | --- | --- | ---
 | 1  |  36  |  Mandag  |  04/09/2023  |  (MA) Velkomst, Pseudokode og Formaliteter  |  CLRS: preface + kap. 1  |  
 | Tirsdag  |  05/09/2023
 | Fredag  |  08/09/2023
