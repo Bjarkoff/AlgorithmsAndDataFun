@@ -1,0 +1,86 @@
+Opgave 1:
+
+(1) Two teams of computer science students compete in writing the most
+e cient algorithm to solve a task on an array with N entries. Team 1
+has constructed an algorithm that runs in
+f1(N) = 10   N10
+steps. Team 2 has constructed an algorithm that runs in
+f2(N) = 2N
+steps. One of the following statements must hold:
+(A) Team 1's algorithm runs with fewer steps for all N.
+(B) Team 2's algorithm runs with fewer steps for all N.
+(C) Team 1's algorithm runs with fewer steps for some choices of N,
+while Team 2's algorithm runs with fewer steps for some other
+choices of N.
+Draw the graphs of the functions. Which of the statements (A), (B), and
+(C) are true?
+
+Oplagt at B overhaler A senere, men A starter størst.
+
+Opgave 2: 
+
+10*N^10 = 2^N, vi prøver at sætte lidt ind og se. Vi får løsning for N > 63, dvs. N=64.
+Dvs. A har flest trin for N<64, derefter har B flest trin.
+
+Opgave (3) Team 1 and Team 2 have access to two di erent computers. It takes
+c1 > 0 seconds to compute one step for Team 1 and c2 > 0 seconds to
+compute a step for Team 2. One of the following statements must hold:
+(A') Team 1's algorithm  nishes faster for all N.
+(B') Team 2's algorithm  nishes faster for all N.
+(C') Team 1's algorithm runs  nishes faster for some choices of N, while
+Team 2's algorithm  nishes faster for some other choices of N.
+4
+Is it possible to identify any of the statements (A'), (B'), and (C') as
+false without knowing the exact value of c1 and c2? If yes, then which
+one(s)?
+
+Ja, A kan aldrig være sand, for ligegyldigt hvor stor c1 og c2 er, vil 
+B altid overhale A på et tidspunkt.
+B kan ikke udelukkes, for den vokser som sagt hurtigst.
+C var jo tilfældet for c1=c2=1, så det kan oplagt være sandt.
+
+(4) Consider the following pseudo-code
+rec(n,str):
+if n=0
+print(str)
+else
+rec(n-1, "0" + str)
+rec(n-1, "1" + str)
+Find a recursive expression for the running time, T(n), of rec(n," ").
+Find an explicit expression for T(n). What does rec(n," ") print out?
+
+T(n) = 1 + 2*T(n-1) (fordi først tjekkes om der skal printes, derefter
+køres to gange på samme algoritme, bare med (n-1) som argument).
+
+T(n) = 2^(n+1)-1. Jeg kunne se det var eksponentielt med grundtal 2, og prøvede mig frem.
+
+(5) Use the rules from this week's notes to order the following functions
+according to their asymptotic growth
+2^n; 1000; n^3 + log2(n)
+
+1000 = Theta(1), fordi der findes c>0 og x0 sådan at 
+1000 <= c*1 for alle x>=x0, specifikt her c = 1000. (dette er 1000 = O(1)),
+men også omvendt, derfor Lambda(1), ergo Theta(1).
+
+2^n vokser hurtigst og som 2^n...
+
+n^3+log2(n) vokser middelhurtigt. Interessant er, at den ikke er Theta(n^3), specifikt fordi:
+
+n^3+log2(n) / n^3 --> infty, for n --> infty. Dermed er n^3+log2(n) = omega(n^3).
+Omvent er n^3+log2(n) = o(n^4). 
+
+Opgave (6) Assume that a; b; c > 0. Use the properties of the logarithms from this
+week's notes to show that
+  (loga b) (logc d) = (loga d) (logc b).
+  logb a = (loga b)􀀀1
+where, in each equation above, logarithm bases are not 1.
+
+(loga b) (logc d) = (logc b / logc a) * (loga d / loga c) = (loga d) (logc b) (loga c / logc a)
+Vi skal altså vise at (loga c / logc a) = 1.
+
+loga c / logc a = (logc a / logc c) / logc a = 1/1 = 1, fordi logc c = 1.
+
+logb a = (loga b)^(-1)
+Vi prøver at vise ovenstående:
+
+logb a = loga a / loga b = 1 / loga b = (loga b)^(-1).
