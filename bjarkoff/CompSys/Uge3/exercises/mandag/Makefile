@@ -17,3 +17,6 @@ ascii2int: ascii2int.c
 
 roll: roll.c
 	$(CC) -o roll roll.c $(CFLAGS)
+
+hello: hello.c
+	$(CC) -o hello hello.c $(CFLAGS)	
