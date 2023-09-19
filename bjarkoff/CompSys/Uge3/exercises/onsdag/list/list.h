@@ -12,6 +12,9 @@ void list_free(struct list*);
 // Insert element at head of list.  Returns 0 on success.
 int list_insert_first(struct list*, void*);
 
+// Insert element at end of list.  Returns 0 on success.
+int list_insert_last(struct list*, void*);
+
 int list_remove_first(struct list*, void**);
 
 typedef void* (*map_fn)(void*, void*);

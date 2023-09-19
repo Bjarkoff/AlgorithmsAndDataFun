@@ -35,7 +35,25 @@ int list_insert_first(struct list* list, void* data) {
   return 0;
 }
 
-
+int list_insert_last(struct list* list, void* data) {
+  struct list_node *new_tail = malloc(sizeof(struct list_node));
+  if (new_tail == NULL) {
+    return 1; // malfunction using malloc
+  }
+  new_tail->data = data;
+  new_tail->next = NULL;
+  if (list->head == NULL) {
+    list->head = new_tail;
+    return 0;
+  }
+  struct list_node *node = list->head;
+  while (node->next != NULL) {
+    node = node->next;
+  }
+  // at this point 'node' should be last node of list
+  node->next = new_tail;
+  return 0;
+}
 
 int list_remove_first(struct list* list, void** dest) {
   struct list_node *old_head = list->head;

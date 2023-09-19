@@ -71,4 +71,24 @@ int main(void) {
   assert(d == &x && x == 1+42);
 
   list_free(l);
+
+  struct list *l2 = list_create();  
+
+  // test appending a couple of elements 
+  assert(list_insert_last(l2, &x) == 0);
+  assert(list_insert_last(l2, &y) == 0);
+  assert(list_insert_last(l2, &z) == 0);
+
+  print_list(l2);
+
+  // assert list2 properly mapped
+  assert(list_remove_first(l2, &d) == 0);
+  assert(d == &x && x == 1+42);
+  assert(list_remove_first(l2, &d) == 0);
+  assert(d == &y && y == 2+42);
+  assert(list_remove_first(l2, &d) == 0);
+  assert(d == &z && z == 3+42);
+
+  list_free(l2);
+
 }
