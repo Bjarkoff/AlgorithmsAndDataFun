@@ -49,10 +49,15 @@ rec(n-1, "1" + str)
 Find a recursive expression for the running time, T(n), of rec(n," ").
 Find an explicit expression for T(n). What does rec(n," ") print out?
 
-T(n) = 1 + 2*T(n-1) (fordi først tjekkes om der skal printes, derefter
+rec(2," ") ->
+rec(1,"0" + " ") + [rec(1,"1" + " ")] =
+rec(1, "0 ") + [...]
+rec(0, "0" + "0 ") + rec(0, "1" + "0 ") + [...]
+
+T(n) = 2 + 2*T(n-1) (fordi først tjekkes om der skal printes, derefter
 køres to gange på samme algoritme, bare med (n-1) som argument).
 
-T(n) = 2^(n+1)-1. Jeg kunne se det var eksponentielt med grundtal 2, og prøvede mig frem.
+T(n) = 2^(n+1). Jeg kunne se det var eksponentielt med grundtal 2, og prøvede mig frem.
 
 (5) Use the rules from this week's notes to order the following functions
 according to their asymptotic growth
