@@ -1,0 +1,35 @@
+opgave 1:
+
+int x;
+int *p;
+p = &x;
+*p = 0;
+
+Opgave 2:
+
+int x;
+int *p;
+int **pp;
+pp = &p;
+p = &x;
+**pp = 0;
+
+Opgave 3:
+
+int x, y;
+int *p = &__(x)__;
+p = __&y___;
+*p = 0;
+p = __&x___;
+*p = 1;
+
+Opgave 4:
+
+int x, y;
+int* arr[2];
+arr[0] = __&x__;
+arr[1] = arr[0];
+*(arr[1]) = __1__;
+*(arr[0]) = *(arr[0]) - 1;
+
+- give a qualified guess for the type declaration of arr

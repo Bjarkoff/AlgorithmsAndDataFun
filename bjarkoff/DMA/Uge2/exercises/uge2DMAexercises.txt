@@ -1,0 +1,24 @@
+Opgave 2 (rang, median og partitionering)
+
+a) Sortér med Merge-sort, og så er tallet med rang k jo på index k, i theta(nlogn) tid.
+b) Vi har en algoritme der i lineær tid finder medianen i et array. Først bestemmer vi 
+medianen i lineær tid. Nu kan vi lineært køre igennem vores array og alle de 
+elementer, som er større end medianen sættes i et nyt array A1, og alle dem, som er 
+mindre eller lig medianen i et andet array A0. Der har vi vores partitionering.
+c) Vi laver en partitionering i lineær tid. Så laver vi en partitionering igen, osv.
+Indtil vi kun har arrays, hvor alle elementer er ens (ved faktisk ikke hvordan vi tjekker dette?).
+Aha, vi kan tjekke ved at hvis A1 i en partitionering er tom, så er A0 udelukkende med 
+ens elementer. Nå, så til sidst så kan vi jo bare samle dem sammen, for vi kan ligesom kalde
+de første to for A0, A1, de næste for A00, A01 og A10 og A11, osv., og så samler vi dem
+bare i den rækkefølge.
+d) Vi skal finde tallet med en bestemt rang, k, i lineær tid, dvs. kun ét gennemløb af 
+vores array! Hvad hvis nu vi gennemløber hele arrayet én gang og finder summen af elementerne.
+Så bagefter løber vi igennem igen... hmm.
+
+RangLinearTime(A,k)
+  Løb de første k værdier af A igennem, bestem max.
+  rang_k = max
+  for j = k+1 to A.Length-1
+    if (A[j] <= max) {
+
+    }
