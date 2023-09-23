@@ -13,6 +13,7 @@
 ### Docs
 
 - RISC-V Cheatsheet: https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf
+- x86-64 assembly cheatsheet: https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf
 
 ## Course plans
 
