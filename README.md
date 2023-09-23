@@ -10,6 +10,9 @@
 
 - Computer Organization and Design RISC-V Edition by Patterson and Hennessy
 
+### Docs
+
+- RISC-V Cheatsheet: https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf
 
 ## Course plans
 
