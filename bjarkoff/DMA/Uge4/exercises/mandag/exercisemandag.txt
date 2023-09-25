@@ -1,1 +1,350 @@
-hej
+Opgave CLRS 10.1.2-4:
+
+Initially empty stack S, stored in array S[1:6]
+
+1: - (s-top = 0)
+2: -
+3: -
+4: -
+5: -
+6: -
+Push(S,4):
+1: 4 (s-top = 1)
+2: -
+3: -
+4: -
+5: -
+6: -
+Push(S,1):
+1: 4
+2: 1 (s-top = 2)
+3: -
+4: -
+5: -
+6: -
+Push(S,3):
+1: 4
+2: 1
+3: 3 (s-top = 3)
+4: -
+5: -
+6: -
+Pop(S):
+1: 1
+2: 4 (s-top = 2)
+3: 3
+4: -
+5: -
+6: -
+Push(S,8):
+1: 1
+2: 4
+3: 8 (s-top = 3)
+4: -
+5: -
+6: -
+Pop(S):
+1: 1
+2: 4 (s-top = 2)
+3: 8
+4: -
+5: -
+6: -
+
+
+
+
+Opg. 10.1.4:
+Q[1:6].
+(Q_tail = 2, Q_head = 0, Q_size = 6)
+1: -
+2: -
+3: -
+4: -
+5: -
+6: -
+ENQUEUE(Q,4)
+(Q_tail = 2, Q_head = 1, Q_size = 6)
+1: 4
+2: -
+3: -
+4: -
+5: -
+6: -
+Enqueue(Q,1)
+(Q_tail = 3, Q_head = 1, Q_size = 6)
+1: 4
+2: 1
+3: -
+4: -
+5: -
+6: -
+Enqueue(Q,3)
+(Q_tail = 4, Q_head = 1, Q_size = 6)
+1: 4 (head)
+2: 1
+3: 3
+4: - (tail)
+5: -
+6: -
+Dequeue(Q)
+(Q_tail = 4, Q_head = 2, Q_size = 6)
+1: 4
+2: 1 (head)
+3: 3
+4: - (tail)
+5: -
+6: -
+Enqueue(Q,8)
+(Q_tail = 5, Q_head = 2, Q_size = 6)
+1: 4
+2: 1 (head)
+3: 3
+4: 8
+5: - (tail)
+6: -
+Dequeue()
+(Q_tail = 5, Q_head = 3, Q_size = 6)
+1: 4
+2: 1
+3: 3 (head)
+4: 8
+5: - (tail)
+6: -
+
+
+Opg. 10.1.3:
+
+S_top_1 = 0, S_top_2 = n. Når der incrementes i 1, bliver S_top_1++, 
+når der incrementes i 2, bliver S_top_2--. Hvis nogensinde S_top_1 == S_top_2
+har vi en abort, fordi de to lister så tilsammen har mere end n elementer.
+
+
+
+
+
+
+Opgave 2: Algoritmer på hægtede lister
+
+Foo(L)
+x = L.head
+c = 0
+while x != NIL
+x = x.next
+c = c + 1
+return c
+
+Bar(x, s)
+if x == NIL
+return s
+return Bar(x.next, s + x.key)
+
+Opgaver:
+
+(a) Håndkør Foo(L).
+
+Foo(L)
+x = "25"
+c = 0
+x != NIL
+  x = "9"
+  c = 1
+x != NIL 
+  x = "16"
+  c = 2
+x != NIL 
+  x = "4"
+  c = 3
+x != NIL
+  x = "1"
+  c = 4
+x != NIL
+  x = NIL
+  c = 5
+x == NIL
+  return 5.
+
+
+(b) Forklar hvad Foo gør
+
+Foo(L) udregner antal elementer i listen, L.
+
+(c) Håndkør Bar(L.head, 0).
+
+Bar(L.head, 0)
+L.head != NIL
+return Bar(L.head.next, 0 + L.head.key)
+  Bar("9", 0 25)
+  "9" != NIL
+  return Bar("9".next, 25 + "9".key)
+    Bar("16", 34)
+    "16" != NIL
+    return Bar("16".next, 34 + "16".key)
+      Bar("4", 50)
+      "4" != NIL
+      return Bar("4".next, 50 + "4".key)
+        Bar("1", 54)
+        "1" != NIL
+        return Bar("1".next, 54 + "1".key)
+          Bar(NIL,55)
+          NIl == NIL
+          return 55
+        return 55
+      return 55
+    return 55
+  return 55
+return 55
+
+
+(d) Forklar hvad Bar gør.
+
+Bar returnerer oplagt summen af keys i den hægtede liste.
+
+
+
+
+Opgave 3: Repræsentation af hægtet liste som flat array.
+
+På plads i er key, på plads i+1 er "addressen på næste element" next,
+og på i+2 er "prev". Addressen er index på key til et element.
+
+Lavet i hånden. Bemærk at elementer ikke fjernes fra arrayet,
+når de fjernes fra den hægtede liste.
+
+Opgave 4:
+
+x ikke sidste element i listen, så:
+
+x.next = x.next.next
+betyder at man springer et led over i listen, og alle led
+fra og med x rykker nu én til højre.
+
+b) Lad t være et nyt element der ikke er i listen i forvejen. Hvad er effekten af følgende kodestump?
+
+t.next = x.next
+x.next = t
+
+Først sættes t til at pege mod det element, som x peger mod. Dernæst sættes x til at pege mod t.
+Derfor er t blevet indsat i kæden til højre for x.
+
+c) Hvorfor gør følgende kodestump ikke det samme som koden fra ovenst aende opgave?
+
+x.next = t
+t.next = x.next
+
+Fordi når x.next = t mistes jo informationen om, hvad x plejede at pege imod.
+Så nu er anden linje ækvivalent med t.next = x.next = t, dvs. t peger på sig selv,
+hvilket vil give stack overflow, for vi kommer aldrig videre i listen.
+
+
+
+CLRS 10.2.2-3:
+
+Struct stack_node {
+  *struct stack_node next;
+  *void data;
+}
+
+struct stack {
+  *struct stack_node head;
+}
+
+struct stack_create {
+  ...
+}
+
+int pop(struct stack* stack) {
+  if stack.head == NULL {
+    return 1;
+  }
+  void* out_data = stack->head->data;
+  struct stack_node *next = stack->head->next;
+  free(stack->head);
+  stack->head = next;
+  return out_data;
+}
+
+int push(struct stack* stack, void* data) {
+  struct stack_node *new_head = malloc(sizeof(struct stack_node));
+  assert(new_head != NULL);
+  new_head->data = data;
+  new_head->next = stack->head;
+
+  stack->head = new_head;
+  return 0;
+}
+
+Skulle jeg tilføje attributes til listen? Ja, altså, stack skal jo have et hoved. Men nej,
+ikke noget behov for at tilføje noget til listen.
+
+Implementere en kø:
+
+struct queue_node {
+  void* data;
+  struct queue_node next;
+}
+
+struct queue {
+  struct queue_node head;
+  struct queue_node tail;
+}
+
+void* dequeue(struct queue queue) {
+  if (queue->head == NULL) {
+    return NULL;
+  }
+  void* out_data = queue->head->data;
+  struct queue_node *next = queue->head->next;
+  free(queue->head);
+  queue->head = next;
+  return out_data;
+}
+
+int enqueue(struct queue queue, void* data) {
+  struct queue_node *new_head = malloc(sizeof(struct queue_node));
+  new_head->data = data;
+  new_head->next = NULL;
+  if tail = NUll {
+    tail = new_head;
+  }
+  else {
+    tail->next = new_head;
+  }
+  return 0;
+}
+
+Vi blev nødt til at tilføje både et head og en tail til køen for at
+ordne dette, det er vel de "attributes" de snakker om?
+
+
+
+Opgave 6: Sorterede hægtede lister
+
+L er en enkelt-hægtet liste med n elementer, hvor keys er heltal "gemt i 
+L i sorteret rækkefølge", what? Jeg antager at de mener at head i listen er
+laveste key, som henviser til næstlaveste, og så fremdeles.
+
+a) Insert(L, x) {
+  if L.head == NIL:
+    L.head = x;
+  else if (L.head.key >= x.key) {
+    x.next = L.head;
+    L.head = x;
+  }
+  else {
+    y = L.head;
+    while (y.next.key < x.key) {
+      y = y.next;
+    }
+    // Now y.next.key >= x.key, but y.key < x.key
+    x.next = y.next;
+    y.next = x;
+  }
+}
+
+b) Professor Gørtz foreslår at man kan forbedre tingene vha. binær søgning, er det rigtigt?
+NEJ, for bare at gå til midten vil være n/2 operationer,  og hvis man så skal til højre
+er det 3n/4 operationer, osv., håbløst.
+
+
+CLRS problem 10.1:
