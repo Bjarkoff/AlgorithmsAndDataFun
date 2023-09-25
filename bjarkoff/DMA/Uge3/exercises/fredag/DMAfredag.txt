@@ -1,0 +1,99 @@
+Først GCD(210,45) via Euklids algoritme:
+
+GCD(210,45):
+divid+er 210 med 45: 210 = 4*45 + 20
+dividér 45 med 20: 45 = 2*20 + 5
+dividér 20 med 5: 20 = 4*5 + 0,
+
+så GCD(210,45) = 5, den sidste af de ikke-0 divisorer.
+
+KBR 1.4.10-13:
+
+LCM(72,108): Vi ved fra teorem 1.6 at LCM(a,b)=a*b/GCD(a,b). Så:
+GCD(72,108):
+divider 108 med 72: 108 = 1*72 + 36
+dividér 72 med 36: 72 = 2*36 + 0
+altså er GCD(72,108)= 36, den sidste ikke-0 divisor.
+Dermed LCM(72,108) = 72*108/36 = 2*108 = 216.
+
+Alternativ algoritme:
+
+72 = 2* 36 = 2 * 6^2 = 2^3*3^2
+108 = 3*36 = 3 * 6^2 = 2^2*3^3
+GCD = 2^min(2,3)*3^(min2,3) = 2^2*3^2 = 4*9 = 36
+LCM = 2^max(2,3)*3^max(2,3) = 2^3*3^3 = 8*27 = 270 - 54 = 216. Det stemmer.
+
+KBR 1.4.16:
+
+f_7(752 + 793) = (1540 + 5) % 7 = (220*7 + 5) % 7 = 5.
+f_7(752) = 749 + 3 = 107*7 + 3 -> 3.
+f_7(793) = 791 + 2 = 113*7 + 2 -> 2.
+Ergo additivt (mod_7) vil jeg mene.
+Det gælder jo tydeligt, fordi hvis f_7(x) = a og f_7(y) = b, så 
+x+y = n*7+x + m*7+y = (m+n)*7+(x+y), så x+y % 7 er jo svaret.
+Og er den lineær ift. konstanter også?
+lad os sige f_7(x) = a, så x = 7*q + a.
+Hvis så p*x = 7*p*q+p*a, så p*a % 7 giver igen svaret.
+
+f_7(3*1759) = f_7(5277) = 4900 + 350 + 21 + 6 = 7*7*100+50*7+3*7+6 = 7*753+6 -> 6.
+3*f_7(1759) = 3 * (1400+ 357 + 2) -> 3*2 = 6.
+
+KBR 1.4.25:
+Bevis for ??
+Lad a, b være heltal. Hvis p er primtal, og p | ab, så må p | a eller p | b.
+(jeg tror ovenstående er sætningen, vi skal bevise).
+Vi vil vise at hvis p |- a, så må p | b.
+Hvis p |- a, så må GCD(a,p)=1, fordi p er prim så den eneste anden divisor p kan have er p selv.
+Men GCD(a,p) går ikke, fordi vi har antaget p |- a.
+Fra Theorem 4 følger at 1 = s*a+t*p for heltal s, t. Så gælder b = sab + tpb (ganger igennem med b).
+Vi har antaget at p | ab, og p deler oplagt også sig selv, derfor p | (sab + tpb) => p | b.
+
+KBR 1.4.35:
+Theorem 2c) siger at hvis a|b eller a|c, så a|bc. Gælder det omvendte også, altså at hvis
+a|bc, så enten a|b eller a|c?
+Vi har lige vist at det gælder i tilfældet, hvor p er primtal. Men det holder oplagt ikke, når
+a ikke er prim.
+Lad a = 4, b=c=2. Så gælder 4=a|bc=2*2=4. Men oplagt gælder IKKE 4|2, derfor hverken a|b eller a|c.
+
+Algoritme til at bestemme om et tal er primtal i sqrt(n)-tid:
+
+a) Vi kan se at algoritmen er en masse konstante checks først (O(1)), og det vigtige er så at 
+at der kommer et loop for D = 3 through sqrt(N) BY 2, dvs. hvert andet step i det loop.
+Men det er jo oplagt O(sqrt(N)), deraf bliver hele rutinen O(sqrt(N)).
+
+b) Hvis algoritmen skulle være O(1), så skulle det betyde at der findes en konstant, c, og et 
+N_0 > 0 sådan at 
+#PRIME(N) \leq c, for alle N > N_0.
+Lad nu c være givet.
+Lad N være et primtal sådan at N > 4*c^2 (det findes, da der er uendeligt mange primtal).
+Så vil loopet jo køre sqrt(N)/2-1 = 2*c/2 - 1 = c - 1 gange (-1, fordi loopet kører fra 3). 
+Men pga. de konstante checks i starten, vil der altså være et antal større end c operationer.
+Men det betyder jo så, at der ikke kan findes et c som ønsket, ergo er algoritmen ikke O(1).
+
+c) Lad t_n være det maksimale antal operationer som algoritmen laver over alle inputs k \in N,
+1 \leq k \leq n. Argumentér for at t_n = \Theta(\sqrt(n)).
+
+Vi kan enten vise at t_n = O(sqrt(n)) og sqrt(n) = O(t_n), eller vise at
+der eksisterer c_1, c_2 > 0 og N_0 > 0 sådan at c_1sqrt(n) \leq t_n \leq c_2\sqrt(n)
+for alle n >= N_0. Vi prøver nok det sidste.
+
+Worst-case scenario er jo oplagt hvis loopet køres maksimalt. Så vi har først
+2 checks (if n = 2, og if n/2 = Int(n/2)). Og bagefter har vi et loop som så kører 
+sqrt(N) / 2 - 1 gang, og så et print bagefter. Alt i alt altså sqrt(N) / 2 + 2 operationer.
+
+Lad så N_0 = 16. Så gælder at sqrt(N) / 4 < sqrt(N) / 2 + 2 for alle N >= N_0 = 16.
+Omvendt gælder også, at sqrt(N) / 2 + 2 < 2 * sqrt(N) (fordi sqrt(N) er mindst lig 4, og 4/2+2 < 2*4).
+Ergo har vi vist at for c_1 = 1/2 og c_2 = 2, og N_0 =16, er betingelsen for \Theta(\sqrt(n)) opfyldt.
+
+
+Extra exercises:
+
+We want to  nd an e cient algorithm which can output a list of all
+primes between 2 and n.
+(a) [*] Argue that the algorithm, which checks the primality of each
+integer between 2 and n using the algorithm from KBR (page 26)
+has runtime  (n^3/2).
+
+Svar: Algoritmen i sig selv kører jo sqrt(n) time, og hvis vi lavet et loop 
+udenom, som løber fra i=2 til n, så bliver der jo 
+sqrt(1)+sqrt(2)+sqrt(3)+...+(sqrt(n))^2 (fordi den løber til n) = ?
