@@ -1,0 +1,182 @@
+Opgave 1:
+
+Hvilke af følgende træer er hobe?
+
+a) er en maks-hob (største værdier øverst), b) er ikke fordi 
+det A[5] < A[10] og A[11], men f.eks. A[2] > A[4] og A[5].
+c) er heller ikke, fordi index 2 kun har et barn, men det barn har selv flere børn,
+en node kan kun have et enkelt barn, hvis det barn er et leaf, ikke en node selv.
+
+delopgave b) hvilke af følgende er hobe:
+
+A = [9; 7; 8; 3; 4]
+B = [12; 4; 7; 1; 2; 10]
+C = [5; 7; 8; 3]
+
+A er en max-hob. Det er OK at 7 har to børn, mens 8 ingen har, mener jeg.
+B er ikke, fordi 10 er et barn af 7, men 7 er mindst, og resten af array er max-hob.
+C er ikke, fordi 3 er mindre end sin parent, men 7 er større end sin parent.
+
+Opgave 3: Lad S = (4; 8; 11; 5; 21; * ; 2; * ) være en sekvens af operationer 
+hvor alle tal svarer til en indsættelse
+af tallet og  * svarer til en Extract-Max-operation. Startende med en tom hob H, vis hvordan
+H ser ud efter hver operation i S.
+
+---
+4
+---
+8
+4
+---
+11
+4 8
+---
+11
+5 8
+4
+---
+21
+11 8
+4 5
+---
+11
+5 8
+4 
+---
+11
+5 8
+4 2
+---
+8
+5 2
+4
+
+Tegn hvordan nedenst aende max-hob ser ud efter inds ttelse af et element med n gle 19.
+
+20
+18 14
+16 5 11 10
+13 4 2 5 2
+
+først indsættes 19 på den nederste plads, (højre sub-hob), og så flyttes den opaf vha. increase key.
+
+20
+18 19
+16 5 14 10
+13 4 2 5 2 11  
+
+e) Tegn hvordan nedenst aende max-hob ser ud efter en Extract-Max-operation.
+
+20
+18 14
+16 5 11 10
+13 4 2 5 2
+
+Først sættes 20 øverst til at være det sidste element (2), og derefter
+køres heap-maxify på køen med size én mindre.
+
+18
+16 14
+13 5 11 10
+2 4 2 5 
+
+CLRS 6.1-4, 6.1-6, 6.1-7, 6.1-8
+6.2-1, 6.2-4, 6.2-5,
+6.3-1,6.3-3
+
+CLRS 6.1-4 hvor kan minimum sidde i en max-heap?
+Den kan sidde blandt alle forskellige leafs. Vi kan ikke vide 
+i hvilken sub-heap den sidder nemlig, den vil bare altid være et leaf.
+
+6.1-6: Er et sorteret array allerede en min-heap? 
+Der skal jo gælde at A[parent] <= A[i] for alle i. Og det gælder jo, ja,
+fordi i et sorteret array er A[i] <= A[j] for alle i < j, og 
+parent < i per definition.
+
+6.1-7: Er [33,19,20,15,13,10,2,13,16,12] en max-heap?
+33
+19 20
+15 13 10 2
+13 16 12
+nej det er den ikke, fordi 16 er større end sin parent 14.
+
+6.1-8: Tag et i > floor[n/2]. Så kan man spørge om dette index har nogen
+nodes selv? Vi kan jo prøve at gange med 2, for at finde første child:
+(floor[n/2]+1)*2 = floor[n/2]*2+2 >= (n-1)+2 = n+1. Altså ikke en del af vores array.
+Det skyldes at floor[n/2]*2 enten er lig n, eller også, hvis n var rundet ned, er det jo
+(n/2-1/2)*2 = n-1.
+
+6.2-1: Illustrér MAX-HEAPIFY(A;3) på A = [27,18,3,16,13,10,1,5,7,12,4,8,9,0].
+
+27
+18 3
+16 13 10 1
+6 7 12 4 8 9 0
+
+Det er 3-tallet, som er i violation. Derfor så kører vi MAX-HEAPIFY(A,3). så
+først bytet 3 med den største af sine børn, 10. Derefter byttes 3 igen 
+med det største af sine børn ,som nu er 9. Vi ender med:
+
+27
+18 10
+16 13 9 1
+6 7 12 4 8 3 0
+
+6.2-4: Hvis man kalder MAX-HEAPIFY(A,i), når A[i] er større end sine børn,
+så sker der ikke noget, fordi largest != i bliver ikke kaldt i algoritmen.
+
+6.2-5: MAX-HEAPIFY(A,i) for i > A.heap-size/2?
+For i > A.heap-size/2, så er i jo nødvendigvis et leaf, se tidligere opgave.
+Derfor vil l >= A.heap-size ikke være sand, så largest = i, og igen
+r >= A.heap-size er ej heller sand, så intet sker. Dermed largest = i, og intet sker.
+
+6.3-1:
+
+Illustrér BUILD-MAX-HEAP på A = [5,3,17,10,84,19,6,22,9].
+
+Vi starter med:
+5
+3 17
+10 84 19 6
+22 9
+Så kører vi først MAX-HEAPIFY(A,n)) = 
+A.heap-size = n = 9
+MAX-HEAPIFY(A,floor(9)) = MAX-HEAPIFY(4).
+Det resulterer i:
+5
+3 17
+22 84 19 6
+10 9
+Så køres MAX-HEAPIFY(3), som resulterer i:
+5
+3 19
+22 84 17 6
+10 9
+Så køres MAX-HEAPIFY(2), som resulterer i:
+5
+84 19
+22 3 17 6
+10 9
+SÅ køres MAX-HEAPIFY(1), som resulterer i:
+84
+5 19
+22 3 17 6
+10 9
+som selv kører MAX-HEAPIFY(2), som resulterer i:
+84
+22 19
+5 3 17 6
+10 9
+som selv kører MAX-HEAPIFY(4), som resulterer i:
+84 
+22 19
+10 3 17 6
+5 9
+og SÅ er vi færdige.
+
+6.3-3: Man starter med floor(n/2) i BUILD-MAX-HEAP algoritmen, fordi 
+den bruger MAX-HEAPIFY(A,i), som forudsætter at left(i) og right(i)
+er max-heaps! Og det gælder for floor(n/2) og opefter (fordi alle indgange
+fra og med (floor(n/2))*2 er leafs, dvs. de er automatisk max-heaps). Og efter kaldet
+MAX-HEAPIFY(floor(n/2)) er denne nu også en max-heap, og det fortsætter, altså er det
+en invariant for algoritmen, at left(i) og right(i) er max-heaps på denne algoritme.

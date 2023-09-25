@@ -1,0 +1,171 @@
+CLRS 6.4-1, 6.4-3, 10.7-7, 6.5-1, 6.5-2, 6.5-3, 10.2-5,
+evt. lav en rekursiv funktion der vender en liste - bruger den også 
+konstant plads?
+CLRS problem 6.1.
+
+CLRS 6.4-1: Illustrér HEAPSORT på A = [5,13,2,25,7,17,20,8,4].
+Først kaldes BUID-MAX-HEAP(A,9). Så fås (først kaldes max-heapify(4), max-heapify(3) osv.):
+25
+13 20
+8 7 17 2
+5 4
+--> A = [25,13,20,8,7,17,2,5,4].
+Nu udskiftes så det sidste element med det øverste, og vi kører max-heapify. Så fås:
+20 
+13 17
+8 7 4 2
+5 25
+Nu køres så max-heapify hvor vi udskifter 20 med 5 (vi ignorerer altså 25, som er in place):
+17
+13 5
+8 7 4 2
+20 25
+og så hvor 17 udskiftes med 2:
+13
+8 5
+2 7 4 17
+20 25
+og så hvor 4 udskiftes med 13:
+8
+7 5
+2 4 13 17
+20 25
+Og så hvor 8 udskiftes med 4:
+7
+4 5
+2 8 13 17
+20 25
+og så hvor 2 udskiftes med 7:
+5
+4 2
+7 8 13 17
+20 25
+og så hvor 2 og 5 udskiftes:
+4
+2 5
+7 8 13 17
+20 25
+og til sidst hvor 4 og 2 udskiftes:
+2
+4 5
+7 8 13 17
+20 25
+
+
+6.4-3: 
+Vi skal regne ud hvad running time T(n) er, hvis den er sorteret i increasing order?
+Først bygger den via BUILD-MAX-HEAP(A,n). Det bliver tungt, for den er jo omvendt 
+end hvad man ønsker :P HVis nu man startede med en ascending order i stedet, så bliver 
+BUILD-MAX-HEAP(A,n) lineær i n, fordi hvert kald den laver til MAX-HEAPIFY(A,i) vil være konstant.
+Dvs. hvis den er omvendt sorteret så er det først lineært i n. Når man så looper og kører
+en masse MAX-HEAPIFY(A,1) hele tiden, så vil den jo lave det maksimale antal kald, fordi
+den hele tiden udskifter max med min og sætter min øverst, og min skal så hele vejen ned igen.
+Derfor er det worst-case logn gentagelser hver gang (fordi vi har højde logn af træet).
+Derfor er det jo n*log(n), selv når det er sorteret i ascending order.
+
+Hvis det derimod er i descending order, så vil vi først lave en masse kald i BUILD-MAX-HEAP(A,n), fordi
+der altid skal byttes rundt i hvert sub-heap. Så det er skidt. Men vinder vi så lidt når vi bagefter
+kalder MAX-HEAPIFY(A,1) en masse gange? Det tror jeg ikke umiddelbart.
+
+10.1.7: Vi skal implementere en queue vha. to stacks (?!).
+
+OK, hvad er idéen? En stack er jo en datastruktur, som understøtter følgende operationer:
+
+STACK-EMPTY(S)
+PUSH(S,x)
+POP(S)
+
+omvendt, så er en queue en datastruktur som understøtter følgende:
+
+ENQUEUE(Q,x)
+DEQUEUE(Q)
+
+Min tanke er at bruge 10.1-3, hvor jeg viste at man kunne implementere to stacks i ét array, A[1:n], uden
+overflow medmindre det totale elementer i begge stakke er lig n. 
+S_top_1 = 1, S_top_2 = n+1. Når der incrementes i 1, bliver S_top_1++, 
+når der incrementes i 2, bliver S_top_2--. Hvis nogensinde S_top_1 == S_top_2
+har vi en abort, fordi de to lister så tilsammen har mere end n elementer.
+
+Den ene stack kan så fungere som hoveddelen af queue, mens den anden kunne holde styr på
+tail, tænker jeg. Der skal nok arbejdes på detaljerne, før det er en rigtig "implementation".
+Når der skulle enqueues, så ville man jo pushe ind i tail-stacken. Når der skulle dequeues, ville
+man pop'e fra head-stacken. HVIS på et tidspunkt så head-stacken er tom, så ville man jo 
+pushe i head-stacken ved at poppe konsekutivt fra tail-stacken. Men passer det så med, at 
+FIFO i en queue? Lad os sige vi har enqueue'et 1, og så 2, og så 3 i tail-stacken.
+Så dequeuer vi. Men head-stacken er tom. Derfor så flytter vi først 3 (som står øverst i tail-stack)
+, så 2 og så 1 i head-stack. Når vi så popper fra head-stack, er det jo 1, som kommer ud først. 
+Men det passer jo med, at FI (1) også er FO (1). Så det virker, yay!
+Der er jo denne ekstra omkostning med at man nogle gange skal pop'e alle elementerne fra 
+tail-stack over i head-stack. Men det er til gengæld ligesom en ting der kun sker sjældent, så
+det er ikke så slemt. Men worst case DEQUEUE vil være n, fordi vi flytter alle elementerne. Men derfra
+vil det så n gange være konstant. Så ud af n kald til dequeue, vil det koste i gennemsnit n + (n-1)*1 ~ 2n.
+Stadig lineært.
+
+6.5.1:
+Illustrér MAX-HEAP-EXTRACT-MAX på A=[15,13,9,5,12,8,7,4,0,6,2,1].
+
+først så findes max vha. MAX-HEAP-MAXIMUM(A), dvs. det første element.
+Derefter så sættes A[1] = A[A.heap-size], og size gøres én mindre, og man kører 
+MAX-HEAPIFY(A,1), så alt bliver max-heapet uden dog det sidste element, som man har ignoreret.
+Vi antager (og ser), at A er en max-heap. Så sættes 1 øverst, så vi har:
+1
+13 9
+5 12 8 7 
+4 0 6 2 15 (15 ignoreres fremover, fordi A.heap-size er gjort én mindre)
+Og så køres MAX-HEAPIFY nu på A,1. Dvs. vi ender med:
+13
+12 9
+5 6 8 7 
+4 0 1 2 15 (15 ignoreres)
+
+6.5-2:
+MAX-HEAP-INSERT(A,10) på A=[15,13,9,5,12,8,7,4,0,6,2,1]:
+
+først udvides size af A med 1. Så indsættes key -\infty på den nye plads.
+Og så køres MAX-HEAP-INCREASE-KEY(A,entry A.heap-size,10).
+Her tjekkes først at 10 >= -\infty, den går.
+Så sættes objektet x, som står på array-plads A.heap-size, til at have key 10.
+Så kigger vi nu på dets index i array A. 
+Så længe at i > 1 og A[parent(i).key < A[i].key], så byttes rundt på
+parent og x. Til sidst sættes i = parent(i).
+SÅ:
+15
+13 9
+5 12 8 7
+4 0 6 2 1 -\infty
+
+bliver så til 
+
+15
+13 9
+5 12 8 7
+4 0 6 2 1 10
+og så tjekkes om parent af 10 er mindre, det er den (8 <10) så vi får:
+15
+13 9
+5 12 10 7
+4 0 6 2 1 8
+og igen fås så:
+15
+13 10
+5 12 9 7
+4 0 6 2 1 8
+og så er vi færdige.
+
+
+6.5-3:
+Gider jeg ikke lige lave. Men det handler om at implementere en min-priority queue.
+
+
+10.2-5:
+
+ikke-rekursiv følge som vender en singly-linked list om.
+
+SLLReverse(L) {
+  current = L.head;
+  temp = L.head;
+  while (current.next != NULL)
+    temp = current.next.next;
+    current.next = temp;
+
+}
