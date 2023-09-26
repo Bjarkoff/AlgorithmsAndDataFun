@@ -1,0 +1,102 @@
+Exercises with sum-array-col and sum-array-row:
+
+We are looking for both temporal locality (using/updating the same variable many times),
+and certainly spatial locality (calling memory addresses as close as possible to each other).
+
+When looking at sum-array-rows, this is the essential of it:
+
+  for (i = 0; i < N; i++) {
+    for (j = 0; j < M; j++) {
+      sum += a[i * N + j];
+    }
+  }
+  return sum;
+
+Since C operates (contrary to e.g. Matlab) with row-major order, when laying out
+arrays in memory, we have that... Well, looking at a[i * N + j], we see that
+when j is incremented, we are counting elements close to each other in memory
+because of row-major order (a[0][0], a[0][1], ... , a[0][M-1], a[1][0],...).
+So that means we have good spatial locality with this sum!
+That is opposed to sum-array-cols, which is essentially this:
+
+  for (j = 0; j < M; j++) {
+    for (i = 0; i < N; i++) {
+      sum += a[i * M + j];
+    }
+  }
+  return sum;
+
+Here we see that we are summing like this: a[j], a[j+M], a[j+2M], etc., but these are
+not at all spatially adjacent or close, so relatively bad spatial locality.
+
+Vi kan se en stor forskel ved 10,000x10,000 matrix:
+
+bjarkerasmusnicolaisen@Bjarkes-MBP mandag % time ./sum-array-rows 10000 10000
+Sum is: 0
+./sum-array-rows 10000 10000  0.16s user 0.30s system 97% cpu 0.475 total
+
+bjarkerasmusnicolaisen@Bjarkes-MBP mandag % time ./sum-array-cols 10000 10000
+Sum is: 0
+./sum-array-cols 10000 10000  2.46s user 0.45s system 93% cpu 3.098 total
+
+Så omtrent 6 gange længere runtime ved cols end rows.
+
+Nu spørger de om to ting:
+
+1) What is the asymptotic behaviour?
+2) How does it compare to the operations per element that we discussed at the lecture? 
+You need to examine the assembler code to know the exact number for this.
+
+Hmm, asymptotic behaviour kræver jo mange tests...
+rows:
+ved 2500x2500: ca. 0.045
+5000x5000: ca. 1.30
+10,000x10,000: ca. 0.50
+20,000x20,000: ca. 2,2
+40,000x40,000: ca. 9,3.
+
+Så tæt på lineært, det havde jeg da også troet?
+
+"Calculate the execution time per element".
+Så f.eks. nedenfor ser vi ca., at ETPE er:
+
+ETPE = 9,3s / 40,000^2 = 5,8 * 10 ^(-9) s = 5,8 ns.
+Ifølge bogen svarer 5 ns vist godt til access time i en cache,
+som jo nok er det vi får, når vi arbejder med god spatial locality?
+
+Ifølge den anden med columns er ETPE:
+
+ETPE = 3 s / 10,000^2 = 3 * 10^(-8) = 30 ns.
+
+Så altså ca. 6 gange langsommere. I bogen er et eksempel med 100 ns for access til
+main memory, så dette er måske snarere et mellemlag, end at vi fetcher helt nede fra 
+"dybden" af memory.
+
+I lecture så vi at "When accessing successive elements miss rate is sizeof(double)/B = 0.125."
+her har vi sizeof(long)/B (B er vel de bytes vi har i vores block?). Så 0.125 gætter jeg på.
+
+When accessing distant elements, miss rate is 1. Så vi kan regne med ca. 8 gange flere misses
+på den dårlige, og siden runtime er meget betinget af misses regner vi med at den gode er
+lidt mindre end en faktor 8 bedre end den dårlige. Lidt mindre, fordi der jo stadig er lidt
+tid forbundet med hits også.
+
+
+
+3darray-exercise:
+
+for et 3darray a[i][j][k], så vil det ligge i memory sådan:
+
+a[0][0][0],a[0][0][1],...,a[0][0][m-1],a[0][1][0],...
+
+så vi bør altså få bedst køretid, hvis det inderste loop er den sidste variabel.
+
+Ved 1000x1000x1000 matrix, så fik jeg ca. 6 sekunders køretid ved den gode,
+og ca. 10-11 sekunders køretid ved den dårlige arrangering af indecises.
+
+Ved 500x500x500 fik jeg med ny kode (i,j,k): ca. 80,000,000 ns
+Ved samme størrelse med dårlig indicering (k,i,j) fik jeg: 300,300,000 ns
+Altså ca. 4 gange dårligere køretid. Ikke helt det samme som før, men ok.
+
+Den værste indices (k,j,i) gav ca. 2,768,906,000 ns. Altså forbløffende 
+35 gange dårligere køretid! Men hvis den var 6 gange dårligere før,
+er den måske 6^2 \approx 35 dårligere nu? Ja, giver vel mening...

@@ -1,0 +1,211 @@
+COD exercise 5.1, s. 500:
+
+for (I=0; I<8; I++) 
+  for (J=0;J<8000; J++)
+    A[I][J] = B[I][0]+A[J][I];
+
+5.1.1: How many 64-bit integers can be stored in a 16-byte cache block?
+If we have a 16=2^4 byte cache block, and ints are 64 bits, we need 8
+bytes to store an int (8*8=64), so I guess 2 integers can be stored in a 16-byte cache block.
+
+5.1.2: Which variable references exhibit temporal locality?
+
+Of course B[I][0], because it is an invariant under the inner loop.
+Også værd at bemærke at I og J også udviser temporal locality, siden
+de bliver addresseret hele tiden.
+
+5.1.3: Spatial locality is of course A[I][J], since it is in row-major indexing.
+
+In Matlab it is column-order indexing. 
+
+for I=1:8
+  for J=1:8000
+    A(I,J) = B(I,1)+A(J,I) // fejl i programmet, B(I,0) findes ikke i matlab 
+  end
+end
+
+5.1.4: Which variable references exhibit temporal locality:
+Answer: Again B(I,0), I and J.
+5.1.5: Which variable references exhibit spatial locality?
+Answer: Now A(J,I), since A(J,I) and A(J+1,I) are now spatially close in
+column-major order. BUT now alos B[I,0]!
+
+5.1.6: How many 16-byte cache blocks are needed to store all 64-bit matrix elements being
+referenced using Matlab's matrix storage? How many using C's matrix storage?
+(Assume each row contains more than one element.)
+
+For C-language:
+A[I][J]:
+Vi ved der kan være 2 matrix elements per 16-byte cache block. Så for
+64,000 værdier i A skal vi bruge 32,000 cache blocks, både i 
+row-major og column-major. (8 x 8000 / 2 = 32,000)
+Men når vi kigger på B, så kan vi i column-order jo 
+nemt lagre elementerne B[I,1..8] adjacently, så det kræver kun
+4 cache-blocks. Men for row-major order er B[I,0..7] ikke
+adjacent, og kan derfor ikke være gemt i samme cache block. 
+Det kræver altså 8 blokke, derfor en lille forskel på antal cache blocks
+i C og matlab her.
+
+
+Exercise 5.2:
+
+Here is a list of 64-bit (giving a total 2^64 different memory locations) 
+memory address references, given as word addresses:
+
+0x03, 0xb4, 0x2b, 0x02, 0xbf, 0x58, 0xbe, 0x0e, 0xb5, 0x2c, 0xba, 0xfd
+
+
+5.2.1: For each of these references, identify the binary word address, the tag, and the index
+given a direct-mapped cache with 16 one-word blocks.
+
+Answer: The address is the whole binary thing:
+
+0x03 = 00-0000-11_2. 
+
+Since we are dealing with one-word blocks, the "offset" (which says which word inside a block to choose)
+is 2 bits (since each word is 4 bytes, aka we need 2 bits to differentiate between bytes in word). 
+So that means the address is composed of tag, index and 2 bits for offset.
+
+We are operating with 16 blocks in a cache, so that means four bits are index-bits,
+since 4 bits (2^4 = 16) are enough to distinguish which block to choose.
+Note that direct-mapped means 1 block per set, so basically set and block is the same here.
+
+For 0x03, the 0000 would be the index, and the first 58 bits (all 0's) would be the tag.
+
+If we are to list whether each reference is a hit or a miss too,
+assuming cache is initially empty, we would do like this:
+
+0x03 = 00-0000-11 (miss, nothing in cache, now this tag is written to that index in cache)
+0xb4 = 10-1101-00 (miss, nothing in index 1101, 10 written to index)
+0x2b = 00-1010-11 (miss, nothing in index 1010, 00 written to index)
+0x02 = 00-0000-10 (hit!)
+0xbf = 10-1111-11 (miss)
+0x58 = 01-0110-00 (miss)
+0xbe = 10-1111-10 (hit!)
+0x0e = 00-0011-10 (miss)
+0xb5 = 10-1101-01 (hit!)
+0x2c = 00-1010-10 (hit!)
+0xba = 10-1110-10 (miss)
+0xfd = 11-1111-01 (miss)
+
+5.2.2:
+
+Assume now a direct mapped cache with two-word blocks, then:
+
+0x03 = 0000-001-1 (miss, nothing in cache, now this tag is written to that index in cache.
+The data at address 0x03 and 0x02 (since two-words in each line) will be fetched
+and stored in the block/line with tag 0000.)
+0xb4 = 1011-010-0 (miss, nothing in index 010, 1011 written to index)
+0x2b = 0010-101-1 (miss, nothing in index 101, 0010 written to index)
+0x02 = 0000-001-0 (hit! since the 0x02 memory was also fetched when calling memory 0x03.)
+0xbf = 1011-111-1 (miss)
+0x58 = 0101-100-0 (miss)
+0xbe = 1011-111-0 (hit!)
+0x0e = 0000-111-0 (miss, a hit on index, but because the tags do not match it is a miss. Tag is updated)
+0xb5 = 1011-010-1 (hit!)
+0x2c = 0010-101-0 (hit!)
+0xba = 1011-101-0 (miss! tag is updated to this new tag)
+0xfd = 1111-110-1 (miss!)
+
+5.2.3:
+
+We are to optimize the cache design for the given references. There are three different direct-mapped cache 
+designs possible, each with a total of 8 words of data:
+
+C1: 1-word blocks.
+C2: 2-word blocks.
+C3: 4-word blocks.
+
+We saw before that 2 word blocks introduced a lot more hits, which should be what we are seeking.
+But with each call, we also collect more data from memory from each reference, 
+which would be more costly I guess. So: Effective Acces Time:
+
+EAT=Hit Time+(Miss Rate×Miss Penalty)
+
+Let's just set hit time so low (1/100 of miss time), that the other terms are more relevant.
+
+In the first, with 1-word caches, we had 12 misses, and therefore 12 penalties/read from memory.
+EAT = 0 + 1*1.
+
+In the second we had EAT = 0 + 8/12*2 = 8/6, so this is worse.
+
+For the 4 words/line thing:
+
+0x03 = 0000-00-11 (miss)
+0xb4 = 1011-01-00 (miss)
+0x2b = 0010-10-11 (miss)
+0x02 = 0000-00-10 (hit!)
+0xbf = 1011-11-11 (miss)
+0x58 = 0101-10-00 (miss)
+0xbe = 1011-11-10 (hit!)
+0x0e = 0000-11-10 (miss)
+0xb5 = 1011-01-01 (hit!)
+0x2c = 0010-10-10 (miss!)
+0xba = 1011-10-10 (miss!)
+0xfd = 1111-11-01 (miss!)
+
+Her altså EAT = 0 + 9/12*4 = 3, horribelt. Så 1 word per line (eller per block) er altså smartest.
+
+I solutions antager de vist at der er 25 cycles per miss, og så antager de også at 
+cache hit time vokser lineært med antal words/block. De antager mærkeligt nok at f(x) = x + 1,
+hvor f(x) er antal clock cycles per cache hit, og x er antal words/block.
+
+Måske det handler om, at der altid er en "hit lookup time", altså man tjekker først miss/hit, 
+det kunne være en clock cycle. Og så derefter tæller man ekstra? Så først ét tjek på index,
+og derefter, hvis det er et hit, tjek på words proportional med words/block. Det giver vel mening.
+
+
+Exercise 5.5:
+
+For a direct-mapped cache design with 32-bit address, the following bits of the address are used to access
+the cache:
+
+tag: 31-10.
+index: 9-5.
+offset: 4-0.
+
+5.5.1: What is the cache block size (in words)?
+Answer: The cache block size must be 2^(4-0+1)=2^5=32 words long, since we 
+need 5 bits of offset to distinguish between words in a block/line.
+NEJ! Vi skal huske at et word er 4 bytes, så et offset på 2^5 betyder
+2 bits til at repræsentere/skelne mellem de 4 bytes, og 3 bits til 
+words, dvs. kun 8 words.
+
+
+5.5.2: How many blocks does the cache have?
+Answer: We have again 5 bits for indexing, meaning 2^5 = 32 different sets. But I need
+to know how many lines/blocks per set we have to answer this question, yes?
+But I do! Because a direct-mapped cache always has exactly 1 block/set.
+
+5.5.3: What is the rato between total bits required for such a cache
+implementation over the storage bits?
+
+Storage per block: 32 bits (1 word) times 32 words/block = 1024 bits/block.
+There are 32 sets, each with 1 block, so 32768 bits is the total cache storage size.
+Now what is the "total bits required for such a cache implementation"? The index and
+offset-bits are part of the address, NOT stored in the cache, so the answer is 
+that only the tag-part is kept, and a valid-bit.Therefore the final answer to this question 
+will be to add all these bits to the numerator of the equation. We thus have:
+
+((22+1)*32 + 32768*4) / (32768*4) = 1,022
+
+Sva dagen derpå: OK, hvis vi i stedet antager at hvert word har 4 bytes i sig, 
+og vi derfor skal tage højde for dette når vi tæller antal bits.
+Vi har:
+32 blocks/cache
+8 words/block
+4 bytes/word
+8 bits/byte
+
+Dette giver storage bits: 8192.
+Vi har så i cache også yderligere disse ting gemt:
+
+22 tag-bits/block
+1 valid bit/block
+Så det giver os totale cache-bits:
+32 blocks/cache * (22+1 bits/block + 8 words/block * 4 bytes/word * 8 bits/byte) = 8928.
+
+Så kvotienten af cahce vs. storage bits giver:
+8928 / 8192 = 1.09.
+
+
