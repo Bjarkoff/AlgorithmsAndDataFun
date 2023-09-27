@@ -1,3 +1,19 @@
+Vigtig cache-opgave fra lecture onsdag 27/09:
+
+Problem:
+A computer uses 32-bit byte addressing. The computer uses a 2-way associative cache
+with a capacity of 32KB. Each cache block contains 16 bytes. Calculate the number of
+bits in the TAG, SET, and OFFSET  elds of a main memory address.
+Solution:
+Since there are 16 bytes in a cache block, the OFFSET  eld must contain 4 bits (2^4 =
+16). To determine the number of bits in the SET  eld, we need to determine the
+number of sets. Each set contains 2 cache blocks (2-way associative) so a set contains
+32 bytes. There are 32KB bytes in the entire cache, so there are 32KB/32B = 1K sets.
+Thus the set  eld contains 10 bits (2^10 = 1K).
+Finally, the TAG  eld contains the remaining 18 bits (32 - 4 - 10). Thus a main
+memory address is decomposed as shown below.
+
+
 COD exercise 5.1, s. 500:
 
 for (I=0; I<8; I++) 
