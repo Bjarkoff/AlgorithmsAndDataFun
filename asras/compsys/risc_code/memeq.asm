@@ -21,13 +21,9 @@ memeq:
 	# a0 contains address of first byte array
 	# a1 contains address of second byte array
 	# a2 contains length of arrays
-	addi sp, sp, -4 # Reserve words for: ra, addr1, addr2
-	sw ra, 0(sp)
-	
 	
 	# Offset into array
 	li t1, 0
-	
 .loop:
 	# Check if we have reached the end of the array
 	bge t1, a2, .equal
@@ -58,9 +54,6 @@ memeq:
 	j .ret
 
 .ret:
-	
-	lw ra, 0(sp)
-	addi sp, sp, 4
 	ret
 	
 
