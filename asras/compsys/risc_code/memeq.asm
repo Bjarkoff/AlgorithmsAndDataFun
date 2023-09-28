@@ -4,11 +4,7 @@
 	# Load address of data
 	la a0, data1
 	la a1, data2
-#	lui a0, %hi(data1)
-#	addi a0, a0, %lo(data1)
-#	lui a1, %hi(data2)
-#	addi a1, a1, %lo(data2)
-	li a2, 6 # Length of array. Better way to set?
+	li a2, 6 # Length of arrays. Better way to set?
 	
 	call memeq
 	
