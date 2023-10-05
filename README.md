@@ -17,6 +17,6 @@
 
 ## Course plans
 
-- CompSys: https://github.com/diku-compSys/compSys-e2022-pub
+- CompSys: https://github.com/diku-compSys/compSys-e2023-pub
 
 -
