@@ -1,0 +1,107 @@
+Heap management
+Consider an allocator that uses an implicit free list. The payload is preceded 
+by header and a footer, each taking up a single 32-bit word, and containing the 
+size (in bytes) of the block. The header and footer words for a block are always identical.
+
+The size of each memory block must be a multiple of 8 bytes. This means that the least 
+significant three bits of the size is unused for the size, and therefore these are used 
+to encode more information:
+
+Bit 0 (the least significant bit) indicates the use of the current block: 1 for allocated, 0 for free.
+
+Bit 1 indicates the use of the previous adjacent block: 1 for allocated, 0 for free.
+
+Bit 2 is unused and is always set to 0.
+
+The remaining bits contain the size of the block. We pretend that the least significant 3 bits
+ are zero when interpreting the header/footer as a size.
+
+Given the following initial heap contents, show the new contents of the heap after a call to 
+free(0x100f010). Your answers should be given as hex values. 
+Note that the addresses grow from bottom up. Assume that the allocator uses immediate coalescing, 
+that is, adjacent free blocks are merged immediately each time a block is freed.
+
+Heap:
+
+Address	Word
+0x100f028	0x00000013
+0x100f024	0x100f611c
+0x100f020	0x100f512c
+0x100f01c	0x00000013
+0x100f018	0x00000011
+0x100f014	0x100f511c
+0x100f010	0x100f601c
+0x100f00c	0x00000011
+0x100f008	0x0000001a
+0x100f004	0x100f601c
+0x100f000	0x100f511c
+0x100affc	0x100f511c
+0x100afe8	0x0000001a
+0x100afe4	0x0000001a
+
+Answer: Der bliver kaldt 'free(0x100f010)'. Det betyder at al dataen på virtuel addresse
+0x100f010 bliver frigivet. Vi bliver nok nødt til at omskrive vores tabel til binær:
+
+Address	Word
+0x100f028	0x00000013 = 0000...                       0001 0011
+0x100f024	0x100f611c = 0001 0000 0000 1111 0110 0001 0001 1100
+0x100f020	0x100f512c = 0001 0000 0000 1111 0101 0001 0010 1100
+0x100f01c	0x00000013 = 0000...                       0001 0011
+0x100f018	0x00000011 = 0000...                       0001 0001
+0x100f014	0x100f511c = 0001 0000 0000 1111 0101 0001 0001 1100
+0x100f010	0x100f601c = 0001 0000 0000 1111 0110 0000 0001 1100
+0x100f00c	0x00000011 = 0000...                       0001 0001
+0x100f008	0x0000001a = 0000...                       0001 1010
+0x100f004	0x100f601c = 0001 0000 0000 1111 0110 0000 0001 1100
+0x100f000	0x100f511c = 0001 0000 0000 1111 0101 0001 0001 1100
+0x100affc	0x100f511c = 0001 0000 0000 1111 0101 0001 0001 1100
+0x100afe8	0x0000001a = 0000...                       0001 1010
+0x100afe4	0x0000001a = 0000...                       0001 1010
+
+1) If free() is called at some address &x, then the header is by convention 
+placed in a word just BEFORE the address.
+2) the size stored in the header, includes both the footer and the header-sizes themselves.
+
+From 1), we can infer that the head of address 0x100f010 is at address 0x100f00c, 
+and its header is thus the word 0x00000011. This means it IS allocated, and the size is 16 bytes. 
+That means the payload is 8 bytes (4 bytes to header and 4 to footer leaves 8 for payload). 
+Then from address 0x100f010, we must move to 0x100f018 to find the footer, which is indeed equal 
+to the header.
+
+Now we note from the header 0x0000011, which in binary ends with 0001 0001, 
+that the previous block is un-allocated. But we know the footer of this block must 
+be in address 0x100f008. The footer is 0x0000001a, in binary ends with 0001 1010. 
+That is, it is un-allocated as we knew from the header of address 0x100f010. 
+And furthermore it is a block of size 24 bytes, including header and footer. 
+So, this region must be freed as well, when the original call to "free()" is made.
+
+I suppose the addresses 0x100f008, 0x100f004 and 0x100f000 are just there to "confuse", 
+because they are just part of the block preceding 0x100f010.
+
+That leaves the bottom three mysterious addresses, 
+0x100affc, 0x100afe8 and 0x100afe4. From the partial solution provided in the exercise,
+it seems that address 0x10affc is just some random data inside a block.
+Can address 0x100afe8 be a header/footer, you might wonder. If it were a header, the header
+word would be 0x0000001a, so we should move 20 bytes ahead from the header-address 
+to find the identical footer. But that would yield address 0x100affc, which 
+we just saw was not identical, so it cannot be a header.  That means that 0x10afe4 cannot be a 
+footer (cause then 0x10afe8 would be a header). But could 0x100afe8 be a footer? possibly. 
+Could 0x100afe4 be a header? No, cause then address 0x100affc would need to be a header, 
+and since the partial solution showed it was data, this is not possible. 
+So I think 0x100afe4 MUST be some data, while address 0x100afe8 can be both data or a footer. 
+If we treat address 0x100afe8 as a footer, it has word 0x0000001a, which means
+last bits are 0001 1010, so it doesn't change upon freeing at all. What a waste of mind energy on this.
+
+
+OK, what happens when they are freed? I suppose that the block associated with footer at address 0x100f008
+merges with the next block, so it gobbles up header, footer and the 8 bytes data.
+So it grows from size 24 to size 40. That is, the old footer of address 0x100f010
+(which is at address 0x100f018), becomes the new footer of the whole shabang.
+so it will have the word: 0x0000002a = 0000... 0010 1010. This means that 
+the block is of size 40, and that it is un-allocated, but the preceding is still allocated
+as before.
+
+Ahh, of course, now that this region is freed, the next region's header + footer must change
+to show the un-allocation. Therefore it changes from 0x00000013 = ... 0001 0011, to
+0x00000011 = 0001 0001, at addresses 0x100f01c and 0x100f028. Yes yes very good.
+

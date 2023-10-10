@@ -1,0 +1,81 @@
+Opvarmning:
+
+a) er ikke fordi 7 < 13, men 7 er i 13's højre subtree.
+b) samme, bare med 11.
+c) er fin.
+
+delopgave b) Det skal sættes efter 7'tallet, så tror
+i 7-tallets højre sub-tree
+
+delopgave c) 7'tallet sættes på 4-tallets plads
+
+
+Opgave 3:
+a) længste rod-til-blad sti er 4 knuder lang.
+b) 
+KortesteSti(x):
+  if x.left == NIL && x.right == NIL:
+    return 0;
+  if x.right!= NIL && x.left == NIL:
+    ...
+  if x.left!= NIL && x.right == NIL:
+    ...
+  else:
+  return min(KortesteSti(x.left),KortesteSti(x.right)) + 1;
+
+  Den kører i \Theta(h) tid, fordi hver rekursive kald er 1 længere nede i højde.
+  Argument for at den er korrekt: Vi kan kigge på en invariant...
+
+
+Delopgave 4: T er et binært træ med n knuder og rod v.
+
+(a) Giv en rekursiv algoritme, der givet v beregner antallet af blade i T. Skriv pseudokode for din
+l sning.
+
+Blade(v):
+  if v == NIL:
+    return 0;
+  if v.left==NIL && v.right==NIL:
+    return 1;
+  return Blade(v.left) + Blade(v.right);
+
+(b) Giv en rekursiv algoritme, der givet v beregner h jden af T. Skriv pseudokode for din l sning.
+
+Height(x):
+  if x.left==NIL && x.right==NIL:
+    return 0;
+  return max(Height(x.left),Height(x.right)) + 1;
+
+
+Opgave 5: Genneml b af bin re s getr er. 
+Giv en algoritme, der givet et bin rt tr  T med en n gle i hver
+knude, afg r om T overholder søgetræsinvarianten.
+
+Sægetræsinvarianten.. Det er vel at for enhver node i left.subtree af y, så gælder
+x.key <= y.key, og i højre subtree gælder y.key <= x.key.
+
+BinTreeInvar(x):
+  if x==NIL || x.left == NIL && x.right == NIL:
+    return true;
+  return TREE-MAXIMUM(x.left) <= ...
+
+Kan ikke lige finde ud af at skrive den rekursivt, så her kommer en dum
+udgave med while-loop:
+
+BinHelper(x):
+  if x==NIL: 
+    return TRUE
+  if x.left != NIL && x.key >= MAXIMUM-TREE(x.left):
+    return FALSE;
+  if x.right != NIL && x.key <= MINIMUM-TREE(x.right):
+    return FALSE;
+  return TRUE;
+  
+BinTreeInvar(x):
+  if x==NIL:
+    return TRUE;
+  if !BinHelper(x):
+    return FALSE;
+  return BinTreeInvar(x.left) && BinTreeInvar(x.right);
+
+

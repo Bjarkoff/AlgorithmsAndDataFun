@@ -1,0 +1,80 @@
+Solve KBR exercises 2.1.1, 2.1.2, 2.1.8, 2.1.27, 2.1.28.
+  Check De-Morgan's laws by computing and comparing the truth tables
+of the left-hand-side and right-hand-side in each of the following
+1.   (p _ q)   (  p) ^ (  q)
+2.   (p ^ q)   (  p) _ (  q)
+  Solve KBR 2.1.37, 2.1.38.
+2
+  Solve KBR exercises 2.2.10, 2.2.11, 2.2.13, 2.2.15.
+  Let xor be a logical connective with the following truth table:
+P Q P xor Q
+T T F
+T F T
+F T T
+F F F
+Find an equivalent expression for
+P xor Q
+using only ^(and), _(or), and  (not). You can use P and Q any num-
+ber of times and indicate the order of the operations using parenthesis.
+Verify your answers by computing the truth table of your expression.
+(See Example 6 in KBR 2.1 for an example.)
+
+
+KBR 2.1.8:
+assume p and r true, q false.
+~p \and ~q : 
+p | q | ~p | ~q | ~p \and ~Q
+T | T | F  | F  |   F
+T | F | F  | T  |   F
+F | T | T  | F  |   F
+F | F | T  | T  |   T
+
+Since p true, q false, the compund proposition is false.
+
+Checking De Morgans laws:
+
+p | q | ~p | ~q | ~p \and ~Q
+T | T | F  | F  |   F
+T | F | F  | T  |   F
+F | T | T  | F  |   F
+F | F | T  | T  |   T
+
+p | q | p \or q | ~(p \or q) 
+T | T |     T   |   F 
+T | F |     T   |   F  
+F | T |     T   |   F  
+F | F |     F   |   T  
+
+Sandhedstabellerne er ens, derfor er udsagnene logisk ækvivalente.
+
+p | q | ~p | ~q | ~p \or ~q
+T | T | F  | F  |   F
+T | F | F  | T  |   T
+F | T | T  | F  |   T
+F | F | T  | T  |   T
+
+p | q | p \and q | ~(p \and q) 
+T | T |     T   |   F 
+T | F |     F   |   T  
+F | T |     F   |   T  
+F | F |     F   |   T  
+
+Altså er de to udsagn ~p \or ~q og ~(p \and q) igen logisk ækvivalente.
+
+
+KBR 2.1.37+38:
+
+IF (x \neq max and y > 4) THEN ...  -->
+IF (x = max or y <=4) THEN ...
+
+KBR 2.1.38:
+
+WHILE (key = "open" or t<limit) DO ... -->
+WHILE (key \neq "open" and t>=limit) ...
+
+
+P | Q | P xor q | (~P \or ~Q) \and ~(~P \and ~Q)
+T | T |   F     |  F
+T | F |   T     |  T
+F | T |   T     |  T
+F | F |   F     |  F

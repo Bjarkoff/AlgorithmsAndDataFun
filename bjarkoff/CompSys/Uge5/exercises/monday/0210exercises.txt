@@ -1,0 +1,177 @@
+COD 5.16, 5.17, 5.19
+
+5.16: We have a given fully associative (no offset) TLB with four entries, and a page table.
+We assume 4 KiB pages (4096 bytes).
+First access is 0x123d. We must convert to binary, apparently:
+
+0x123d = 0001 0010 0011 1101
+
+Since we have 4 KiB pages, that means that in every address we need 4096 = 2^12, that is
+12 bits to establish the offset within the page.
+Since the TLB is fully-associative, there is no TLB index here (I don't understand why).
+That means first 4 bits are for TLB tag.
+
+0x1 was not a hit, what then? Now we check the page table.
+There is valid bit 0, so a miss and a page fault.
+Then physical memory is evicted.
+And TLB is updated due to LRU, so that now all valid bits are 1.
+And page table index 1 is updated as well, again set to valid.
+The PPN is set to '13' in solutions.
+
+Next:
+TLB: 0xb, 0x7, 0x3, 0x1.
+0x08b3.
+
+TLB miss.
+index 0 in page table is valid, so we fetch data from PP 5.
+There is no page fault.
+TLB is updated: 0x0 (time 0), 0x7 (time 2), 0x3 (time 3), 0x1 (time 1).
+page table not updated.
+
+0x365c: TLB hit, page table hit but page error, so TLB overwrittes the 0x3 entry.
+Now with PPN 14.
+
+TLB is updated: 0x0 (time 1), 0x7 (time 3), 0x3 (time 0), 0x1 (time 2).
+
+0x871b: TLB miss.
+Page fault, since valid is 0 for index 8 in page table. So TLB is updated.
+LRU is 0x7, so now:
+
+TLB is updated: 0x0 (time 2), 0x8 (time 0), 0x3 (time 1), 0x1 (time 3).
+
+And so on...
+
+5.16.2: Now we have 16KiB pages instead of 4 KiB pages. Repeat exercise.
+What would be advantage of having a larger page size?
+
+With 16 KiB pages, it means that we need two additional bits for the 
+VPO, so now there are only 2 bits for the VPN. 
+
+A larger page size reduces the TLB misses, but can lead to fragmentation and 
+lower utility of physical memory.
+
+0x123d = 00 + ..., TLB hit
+0x08b3 = 00 + ..., TLB hit again
+0x365c = 00 + ..., TLB hit again again
+0x871b = 10 + ..., TLB miss
+0xbee6 = 10 + ..., TLB hit
+0x3140 = 00 + ..., TLB hit
+0xc049 = 11 + ..., TLB hit.
+
+5.16.3: Now repeat using 4 KiB pages ad two-way set-associative TLB.
+
+Nu er der 12 bits til VPO, mens der også skal være et index til TLB,
+kun én bit fordi TLB er two-way set-associative. Dvs. tag er 3 bits.
+
+0x123d = 000 + 1 ..., TLB miss, (TLB 111, 111, 011, 001)
+0x08b3 = 000 + 0 ..., TLB miss
+0x365c = 001 + 1..., TLB miss (TLB 111, 111, 011, 001)
+0x871b = 100 + 0..., TLB miss (TLB 100, 111, 011, 001)
+0xbee6 = 101 + 1..., TLB miss (TLB 111, 111, 101, 001)
+0x3140 = 001 + 1..., TLB hit
+0xc049 = 110 + 0..., TLB miss (TLB 111, 110, 011, 001)
+
+IMPORTANT to only look in the correctly indexed set!
+
+5.16.4: 4 KiB pages and direct-mapped TLB:
+
+Now, we have 12 bits for VPO, 2 bits for TLBI and 2 bits for TLBT.
+To have a TLB hit, we need the indexing-bits to match, and the one
+tag in that set to match.
+
+5.16.5: Why must a CPU have a TLB for high performance? 
+Because a PTE hit will still call L1, which is a bit slow. Instead, having a small
+TLB cache will significantly reduce time upon a hit, and not add much time for a miss,
+since this just goes on as without the TLB.
+
+You could also say that every memory acces would require to accesses to RAM.
+One for the PT, and one to get the physical data. Here, with a TLB,
+upon a hit we get the physical page number directly from the TLB, so no need
+to go to RAM to look at the page table - instead, we go directly and fetch the data.
+
+
+
+Exercise 5.17:
+Key page table parameters:
+Virtual address size: 32 bits
+Page size: 8 KiB
+Page Table Entry Size: 4 bytes.
+
+5.17.1: Calculate maximum possible page table size for a system running five processes.
+
+Let's consider only running 1 process first.
+The page table should be indexed so that we can catch all entries.
+Page size 8 KiB, that means 13 bits for VPO.
+This means 32-13 = 19 bits for indexing the page table.
+PTES = 4 bytes, that is 4 bytes in each PTE.
+
+So we have 2^(32 - 13) * 4 bytes, that is 2^21 bytes or 2 MiB maximum page table size.
+
+What changes with 5 processes running at once? Each process has its own page table, 
+so we just multiply by 5, and get 10 MiB page table size total.
+
+5.17.2: calculate the total page table size for a system running five applications each 
+utilizing half of the virtual memory available, given a two-level page table approach with 
+up to 256 entries at the 1st level. Assume each entry of the main page table is 6 bytes.
+Calculate minimum and maximum amount of memory required for this page table.
+
+
+VA size: 32 bits, page size: 8 KiB = 2^13 bytes.
+So there are 32-13 = 19 bits for the VPN. That is, 219 entries in page table.
+
+The size of the main page table is then 256 entries*6 bytes/entry = 1536 bytes.
+That leaves 19-8 = 11 bits for the sub-page tables, so 211 = 2048 entries in each
+sub-page table. There the page table entry size is 4 bytes, so
+2048 entries * 4 bytes/entry = 8 KiB in each sub-page table. 
+Now there were 256 such sub-page table, and 5 processes running, so I guess that makes
+a total of
+5* (1536 bytes + 256 * 8 KiB) \approx 5 * 2 MiB = 10 MiB.
+
+"Calculate minimum and maximum amount of memory required for this page table"
+
+We assume that "utilizing half of the virtual memory available" means that 
+really the 1st bit in the VPN is not used, so 31 bits instead of 32.
+Minimum amount of memory required" must refer to the half-utilization.
+The, we have 128*2048*5*4 Bytes/entry = 5 MiB (neglecting the 1st level page table)
+
+The maximal is if all VPN's point to different physical page numbers.
+Then we had 256 sub-page tables, all with 2048 entries, all of which
+point to 8 KiB of memory, and 5 processes runnning, so
+256*2048*5*4 Bytes/entry = 10 MiB. (neglecting the single 1st level page table)
+
+17.3: A cache designer wants to increase the size of a 4 KiB virtually
+indexed, physically tagged cache. Given the page size shown above, is it possible 
+to make a 16 KiB direct-mapped cache, assuming four 32-bit words per block? 
+How would the designer increase the data size of the cache?
+
+Page size is 8 KiB = 213 Bytes, so we need 13 bits as a VPO.
+direct-mapped cache: There is only 1 block per set.
+There are four words in each block, and four bytes in each word.
+That is, 16 bytes per block.
+Since the proposed size is 16 KiB, that leaves 1 KiB entries in 
+the cache. 
+That is, we need 10 bits to index this cache.
+Also we need 4 bits for offset, since there are 4 words/block, and
+4 bytes/word. But there are only 13 bits available in the 
+8 KiB page size.
+
+
+
+
+Exercise 5.19:
+
+a) a valid bit is zero if there is no corresponding entry in the virtual 
+page table? That is, the valid-bit in the virtual page table is 0,
+so it is paged out to disk.
+
+b) when instruction writes to VA page 30: I guess the LRU timer is reset,
+but other than that not much for the TLB? The bit is valid, so no change there.
+I guess the data stays in the same memory, so the address doesn't change?
+
+Solution says a "write to page 30 would yield a TLB miss". Why??
+Oh, for god's sake, it is because the TLB looks in the virtual page table,
+and there is no page 30. Damn.
+
+c) When software writes to page 200, we notice a RO-value, so we get a 
+"write protection exception" as seen on page 455 in COD.
+

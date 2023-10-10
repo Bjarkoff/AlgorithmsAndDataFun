@@ -1,0 +1,145 @@
+For this question we use Amdahl's Law to estimate speedup in latency. 
+Suppose we have a program where 4% of the work is not parallelisable. 
+Assuming the rest can be fully parallelised without any overhead:
+
+What is the speedup if we run it on a 4-processor machine?
+What about with 128 processors?
+What is the smallest number of processors that will give us a speedup of at least 5?
+What is the smallest number of processors that will give us a speedup of at least 30?
+
+a) Almdahs law says:
+
+ExecTimeAfterImprov = ExecTmeAffected/AmountImprov + ExecTimeUnaff (last is ExecTimeBefore-ExecTimeAffect)
+
+Eller omformuleret til speed-up ved at sige 
+
+ExecTimeBefore/ExecTimeAfter = speed-up = ...
+= ExecTimeBefore / (ExecTmeAffected/AmountImprov + (ExecTimeBefore-ExecTimeAffect))
+
+We can divide by ExecTimeBefore in numerator and denominator so we get fraction 
+of the before-time:
+
+
+speed-up = 1 / (FractionTimeAffected/AmountImprov + (1-FractionTimeAffected))
+
+I vores tilfælde er FractionTimeAffected = 0.96.
+Amount of improvement is number of processors, so 4. Then:
+
+speed-up = 1 / (0.96/4 + (1-0.96)) = 1 / (0.96/4 + 0.04) = 3,57.
+So performance is 3,57 times the old performance. Expected a little below 4, so seems fine.
+
+b) With 128 processors:
+
+speed-up = 1 / ((0.96/128) + 1-0.96) \approx 1/0.04 = 25. (korrekt ca. lig 21).
+
+c) Speed-up of 5, we isolate amount improv:
+1/speed-up = FractionTimeAffected/AmountImprov + (1-FractionTimeAffected) =>
+1/speed-up + FracTimeAffected - 1 = FracTimeAffected/AmountImprov =>
+AmountImprov = FracTimeAffected / (1/speed-up + FracTimeAffected - 1)
+
+I vores tilfælde med speed-up lig 5:
+
+AmountImprov = 0.96 / (1/5+0.96-1) = 6.
+
+d) Vi kan ikke gøre det bedre end grænsen hvor den gamle CPU stadig bruger 4% af
+original tid, dvs. speed-up 25. 
+
+Gustafson's Law
+For this question we use Gustafson's Law to estimate speedup in latency. 
+Suppose we have a program where 4% of the work is not parallelisable. 
+Assuming the rest can be fully parallelised without any overhead, 
+and that the parallel workload is proportional to the amount of processors/threads we use:
+
+What is the speedup if we run it on a 4-processor machine?
+What about with 128 processors?
+What is the smallest number of processors that will give us a speedup of at least 5?
+What is the smallest number of processors that will give us a speedup of at least 30?
+
+Gustafson law says:
+
+S = s + p x N
+where S is speed-up
+s and p are time fractions of serial and parallel on the parallel system, p + s = 1.
+N is number of processors.
+
+a) S = 0.04 + 0.96 * 4 = 3,88
+b) with 128 processors: S = 0.04 + 0.96 * 128 = 122,92
+c) N = (S-s) / p = (5-0.04)/0.96 = 5,167 som rundes op til 6 for heltals-processorer.
+d) N = (S-s) / p = (30-0.04)/0.96 = 31,2 så rundet op mindst 32 processorer.
+
+Estimating parallel fraction
+Suppose that a program runs in 50s on one processor (N=1) 
+and in 10s on sixteen processors (N=16) with the same workload.
+Assuming that the parallel part of the program scales linearly with the number of processors used, 
+what is the parallelisable fraction p?
+
+They want us to use Almdahl's law, because workload is fixed! I guess
+it is because it takes into account exec time before and after...
+
+AmountImprov = FracTimeAffected / (1/speed-up + FracTimeAffected - 1)
+
+ExecTimeAfterImprov = ExecTmeAffected/AmountImprov + ExecTimeUnaff
+10s = ExecTimeAffected / 16 + ExecTimeUnaff
+
+We must suppose that the ExecTimeUnaff has not changed from befor and after.
+That is, the 40 second difference in performance must come from the ExecTimeAffected:
+
+ExecTimeAffected - ExecTimeAffected / 16 = 40s => 
+ExecTimeAffected*15/16
+ExecTimeAffected = 40s * 16/15 = 42,667 s, ExecTimeUnaff = 7,333s
+
+This leaves us with s = ExecutionTimeUnaffected/ExecutionTimeBefore = 7,333s/50s = 0,1466, 
+and thus p = 0,86.
+
+Alternatively:
+
+We have speed-up 5, and 16 processors, so:
+
+speed-up = 1 / (FractionTimeAffected/AmountImprov + (1-FractionTimeAffected))
+5 =  1 / (FractionTimeAffected/16 + (1-FractionTimeAffected))
+
+FractionTimeAffected = ExecTimeAffected/ExecTimeBefore = ...
+= TimeFractionParallel / TimeFractionTotal =  p/(s+p) = p.
+
+5 = 1/(p/16 + (1-p)) =>
+p \approx 0,86.
+
+
+Performance comparisons
+Suppose you wish to parallelise an image processing algorithm. 
+You are given an efficient sequential implementation I_s, and you then 
+develop a parallel implementation I_p. You have access to two machines:
+
+A machine with a single very fast processor running at 4GHz 
+(i.e. executes 4 billion instructions per second).
+
+A machine with eight slower processors, each running at 2.5GHz 
+(i.e. each executes 2.5 billion instructions per second).
+
+Explain how you could perform a fair performance comparison of I_s and I_p.
+
+My Answer: In an ideal world, we have perfectly balanced workload on the eight 
+parallel processors i I_p. We can then calculate the speed-up
+on the parallel program from Almdahl's law:
+
+speed-up = 1 / (FractionTimeAffected/AmountImprov + (1-FractionTimeAffected)) =
+speed-up = 1 / (1/8 + (1-1)) = 8.
+Wow, great work, Bjarke.
+
+OK, so in a perfectly balanced work-load with everything in parallel,
+the parallel program would perform with 2,5GHz * 8 = 20GHz, thus
+outperforming the sequential program by a factor of 5.
+However, this is an upper bound, since perfect parallelization is hard to achive.
+Maybe fair would be to assume that one processor has to do 20% of the work,
+and then find the new execution time. Then the speed-up would only be a factor 5,
+since we have to wait for the slow one, and then we have 2,5GHz * 5 = 12,5GHz compared
+to the 4 GHz sequential one, which is around a factor 3 speed-up.
+
+The text-book answer: When we compare the performance of two programs, 
+both must be shown in their best light. I_s cannot take advantage of more than one processor, 
+so it would be unfair to use a single one of the slow processors. 
+Conversely, parallel programs like I_p might not run optimally on a single processor. 
+Thus, we need to run I_s on system 1 and I_p on system 2 and compare their performance. 
+Since the systems are different, we cannot use speedup-in-latency. 
+What we need to do is compute the throughput of the two programs, and then we can 
+compute the speedup-in-throughput.
